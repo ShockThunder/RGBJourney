@@ -77,16 +77,13 @@ namespace RgbJourney
                     switch (_field[i, j])
                     {
                         case 0:
-                            color = Color.Red;
-                            spriteBatch.Draw(redTexture, rect, color);
+                            spriteBatch.Draw(redTexture, rect, Color.Red);
                             break;
                         case 1:
-                            color = Color.Blue;
-                            spriteBatch.Draw(blueTexture, rect, color);
+                            spriteBatch.Draw(blueTexture, rect, Color.Blue);
                             break;
                         case 2:
-                            color = Color.Green;
-                            spriteBatch.Draw(greenTexture, rect, color);
+                            spriteBatch.Draw(greenTexture, rect, Color.Green);
                             break;
                     }
 
