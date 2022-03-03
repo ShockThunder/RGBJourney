@@ -14,6 +14,8 @@ namespace RgbJourney
         private int _cellSize = 20;
         private int _cellSpacing = 2;
         private Player _player;
+        private UIManager _manager;
+        private bool _isColorSelected = false;
 
         private KeyboardState _keyboardOldState = Keyboard.GetState();
 
@@ -39,26 +41,34 @@ namespace RgbJourney
             _fieldGenerator = new FieldGenerator(_cellSize, _cellSpacing);
             _field = _fieldGenerator.GenerateArray(_fieldSize);
             _player = new Player(_cellSize, _cellSpacing, _fieldSize, _spriteBatch, GraphicsDevice);
+            _manager = new UIManager(_cellSize, _cellSpacing,
+                GraphicsDevice.Adapter.CurrentDisplayMode.Width,
+                GraphicsDevice.Adapter.CurrentDisplayMode.Height, _spriteBatch, GraphicsDevice, Content);
             // TODO: use this.Content to load your game content here
         }
 
         protected override void Update(GameTime gameTime)
         {
-            var keyboardNewState = Keyboard.GetState();
-            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
-                Exit();
-            if (keyboardNewState.IsKeyDown(Keys.Up) && !_keyboardOldState.IsKeyDown(Keys.Up))
-                _player.MoveUp();
-            if (keyboardNewState.IsKeyDown(Keys.Down) && !_keyboardOldState.IsKeyDown(Keys.Down))
-                _player.MoveDown();
-            if (keyboardNewState.IsKeyDown(Keys.Left) && !_keyboardOldState.IsKeyDown(Keys.Left))
-                _player.MoveLeft();
-            if (keyboardNewState.IsKeyDown(Keys.Right) && !_keyboardOldState.IsKeyDown(Keys.Right))
-                _player.MoveRight();
+            
 
-            // TODO: Add your update logic here
+            if (_isColorSelected)
+            {
+                var keyboardNewState = Keyboard.GetState();
+                if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
+                    Exit();
+                if (keyboardNewState.IsKeyDown(Keys.Up) && !_keyboardOldState.IsKeyDown(Keys.Up))
+                    _player.MoveUp();
+                if (keyboardNewState.IsKeyDown(Keys.Down) && !_keyboardOldState.IsKeyDown(Keys.Down))
+                    _player.MoveDown();
+                if (keyboardNewState.IsKeyDown(Keys.Left) && !_keyboardOldState.IsKeyDown(Keys.Left))
+                    _player.MoveLeft();
+                if (keyboardNewState.IsKeyDown(Keys.Right) && !_keyboardOldState.IsKeyDown(Keys.Right))
+                    _player.MoveRight();
 
-            _keyboardOldState = keyboardNewState;
+                // TODO: Add your update logic here
+
+                _keyboardOldState = keyboardNewState;
+            }
             base.Update(gameTime);
         }
 
@@ -71,8 +81,8 @@ namespace RgbJourney
             // TODO: Add your drawing code here
             _fieldGenerator.DrawField(_spriteBatch, GraphicsDevice, _field);
             _player.Draw();
+            _manager.Draw();
             _spriteBatch.End();
-
 
 
             base.Draw(gameTime);
