@@ -11,19 +11,19 @@ namespace RgbJourney
         private FieldGenerator _fieldGenerator;
         private int[,] _field;
         private int _fieldSize = 15;
+        private Player _player;
 
         public Game1()
         {
             _graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
             IsMouseVisible = true;
-            _fieldGenerator = new FieldGenerator();
-            _field = _fieldGenerator.GenerateArray(_fieldSize);
         }
 
         protected override void Initialize()
         {
             // TODO: Add your initialization logic here
+
 
 
             base.Initialize();
@@ -32,7 +32,9 @@ namespace RgbJourney
         protected override void LoadContent()
         {
             _spriteBatch = new SpriteBatch(GraphicsDevice);
-
+            _fieldGenerator = new FieldGenerator();
+            _field = _fieldGenerator.GenerateArray(_fieldSize);
+            _player = new Player(20, 2, _fieldSize, _spriteBatch, GraphicsDevice);
             // TODO: use this.Content to load your game content here
         }
 
@@ -40,6 +42,14 @@ namespace RgbJourney
         {
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
+            if (Keyboard.GetState().IsKeyDown(Keys.Up))
+                _player.MoveUp();
+            if (Keyboard.GetState().IsKeyDown(Keys.Down))
+                _player.MoveDown();
+            if (Keyboard.GetState().IsKeyDown(Keys.Left))
+                _player.MoveLeft();
+            if (Keyboard.GetState().IsKeyDown(Keys.Right))
+                _player.MoveRight();
 
             // TODO: Add your update logic here
 
@@ -50,46 +60,12 @@ namespace RgbJourney
         {
             GraphicsDevice.Clear(Color.Black);
 
-            var spriteBatch = new SpriteBatch(GraphicsDevice);
 
-
-            var redTexture = new Texture2D(GraphicsDevice, 1, 1);
-            redTexture.SetData(new Color[] { Color.Red });
-
-            var blueTexture = new Texture2D(GraphicsDevice, 1, 1);
-            blueTexture.SetData(new Color[] { Color.Blue });
-
-            var greenTexture = new Texture2D(GraphicsDevice, 1, 1);
-            greenTexture.SetData(new Color[] { Color.Green });
-
-            var defaultRect = new Rectangle(0, 0, 20, 20);
-
-
-            spriteBatch.Begin();
+            _spriteBatch.Begin();
             // TODO: Add your drawing code here
-            for (int i = 0; i < _fieldSize; i++)
-            {
-                for (int j = 0; j < _fieldSize; j++)
-                {
-                    var rect = defaultRect;
-                    rect.X = i * 22;
-                    rect.Y = j * 22;
-                    switch (_field[i, j])
-                    {
-                        case 0:
-                            spriteBatch.Draw(redTexture, rect, Color.Red);
-                            break;
-                        case 1:
-                            spriteBatch.Draw(blueTexture, rect, Color.Blue);
-                            break;
-                        case 2:
-                            spriteBatch.Draw(greenTexture, rect, Color.Green);
-                            break;
-                    }
-
-                }
-            }
-            spriteBatch.End();
+            _fieldGenerator.DrawField(_spriteBatch, GraphicsDevice, _field);
+            _player.Draw();
+            _spriteBatch.End();
 
 
 
