@@ -11,6 +11,8 @@ namespace RgbJourney
         private FieldGenerator _fieldGenerator;
         private int[,] _field;
         private int _fieldSize = 15;
+        private int _cellSize = 20;
+        private int _cellSpacing = 2;
         private Player _player;
 
         private KeyboardState _keyboardOldState = Keyboard.GetState();
@@ -34,9 +36,9 @@ namespace RgbJourney
         protected override void LoadContent()
         {
             _spriteBatch = new SpriteBatch(GraphicsDevice);
-            _fieldGenerator = new FieldGenerator();
+            _fieldGenerator = new FieldGenerator(_cellSize, _cellSpacing);
             _field = _fieldGenerator.GenerateArray(_fieldSize);
-            _player = new Player(20, 2, _fieldSize, _spriteBatch, GraphicsDevice);
+            _player = new Player(_cellSize, _cellSpacing, _fieldSize, _spriteBatch, GraphicsDevice);
             // TODO: use this.Content to load your game content here
         }
 

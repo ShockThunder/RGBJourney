@@ -6,8 +6,13 @@ namespace RgbJourney
 {
     public class FieldGenerator
     {
-        private int cellSize = 20;
-        private int cellSpacing = 2;
+        public FieldGenerator(int cellSize, int cellSpacing)
+        {
+            this.cellSize = cellSize;
+            this.cellSpacing = cellSpacing;
+        }
+        private int cellSize;
+        private int cellSpacing;
         public int[,] GenerateArray(int arraySize)
         {
             var random = new Random();
@@ -56,7 +61,6 @@ namespace RgbJourney
                             spriteBatch.Draw(greenTexture, rect, Color.Green);
                             break;
                     }
-
                 }
             }
 
@@ -65,6 +69,24 @@ namespace RgbJourney
             defaultRect.X = field.GetLength(0) / 2 * (cellSize + cellSpacing);
             defaultRect.Y = field.GetLength(0) / 2 * (cellSize + cellSpacing);
             spriteBatch.Draw(whiteTexture, defaultRect, Color.White);
+
+            // Fill corners
+            defaultRect.X = 0;
+            defaultRect.Y = 0;
+            spriteBatch.Draw(whiteTexture, defaultRect, Color.White);
+
+            defaultRect.X = 0;
+            defaultRect.Y = (field.GetLength(0) - 1) * (cellSize + cellSpacing);
+            spriteBatch.Draw(whiteTexture, defaultRect, Color.White);
+
+            defaultRect.X = (field.GetLength(0) - 1) * (cellSize + cellSpacing);
+            defaultRect.Y = 0;
+            spriteBatch.Draw(whiteTexture, defaultRect, Color.White);
+
+            defaultRect.X = (field.GetLength(0) - 1) * (cellSize + cellSpacing);
+            defaultRect.Y = (field.GetLength(0) - 1) * (cellSize + cellSpacing);
+            spriteBatch.Draw(whiteTexture, defaultRect, Color.White);
+
         }
     }
 }

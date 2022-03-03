@@ -10,8 +10,8 @@ namespace RgbJourney
     {
         public int X { get; set; }
         public int Y { get; set; }
-        private int stepSize;
-        private int borderThickness;
+        private int cellSize;
+        private int cellSpacing;
         private Texture2D playerTexture;
         private SpriteBatch spriteBatch;
 
@@ -19,8 +19,8 @@ namespace RgbJourney
         {
             X = fieldSize / 2 * (stepSize + borderThickness);
             Y = fieldSize / 2 * (stepSize + borderThickness);
-            this.stepSize = stepSize;
-            this.borderThickness = borderThickness;
+            this.cellSize = stepSize;
+            this.cellSpacing = borderThickness;
             this.spriteBatch = spriteBatch;
             playerTexture = new Texture2D(graphicsDevice, 1, 1);
             playerTexture.SetData(new Color[] { Color.CornflowerBlue });
@@ -28,27 +28,27 @@ namespace RgbJourney
 
         public void Draw()
         {
-            var rec = new Rectangle(X, Y, stepSize, stepSize);
+            var rec = new Rectangle(X, Y, cellSize, cellSize);
             spriteBatch.Draw(playerTexture, rec, Color.CornflowerBlue);
         }
 
         public void MoveRight()
         {
-            X = X + (stepSize + borderThickness);
+            X = X + (cellSize + cellSpacing);
         }
 
         public void MoveLeft()
         {
-            X = X - (stepSize + borderThickness);
+            X = X - (cellSize + cellSpacing);
         }
 
         public void MoveUp()
         {
-            Y = Y - (stepSize + borderThickness);
+            Y = Y - (cellSize + cellSpacing);
         }
         public void MoveDown()
         {
-            Y = Y + (stepSize + borderThickness);
+            Y = Y + (cellSize + cellSpacing);
         }
     }
 }
