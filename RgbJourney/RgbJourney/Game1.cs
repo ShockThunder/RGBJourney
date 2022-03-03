@@ -13,6 +13,8 @@ namespace RgbJourney
         private int _fieldSize = 15;
         private Player _player;
 
+        private KeyboardState _keyboardOldState = Keyboard.GetState();
+
         public Game1()
         {
             _graphics = new GraphicsDeviceManager(this);
@@ -40,19 +42,21 @@ namespace RgbJourney
 
         protected override void Update(GameTime gameTime)
         {
+            var keyboardNewState = Keyboard.GetState();
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
-            if (Keyboard.GetState().IsKeyDown(Keys.Up))
+            if (keyboardNewState.IsKeyDown(Keys.Up) && !_keyboardOldState.IsKeyDown(Keys.Up))
                 _player.MoveUp();
-            if (Keyboard.GetState().IsKeyDown(Keys.Down))
+            if (keyboardNewState.IsKeyDown(Keys.Down) && !_keyboardOldState.IsKeyDown(Keys.Down))
                 _player.MoveDown();
-            if (Keyboard.GetState().IsKeyDown(Keys.Left))
+            if (keyboardNewState.IsKeyDown(Keys.Left) && !_keyboardOldState.IsKeyDown(Keys.Left))
                 _player.MoveLeft();
-            if (Keyboard.GetState().IsKeyDown(Keys.Right))
+            if (keyboardNewState.IsKeyDown(Keys.Right) && !_keyboardOldState.IsKeyDown(Keys.Right))
                 _player.MoveRight();
 
             // TODO: Add your update logic here
 
+            _keyboardOldState = keyboardNewState;
             base.Update(gameTime);
         }
 
