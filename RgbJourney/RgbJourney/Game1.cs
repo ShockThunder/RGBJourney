@@ -140,39 +140,39 @@ namespace RgbJourney
                 || keyboardNewState.IsKeyDown(Keys.D1) && !_keyboardOldState.IsKeyDown(Keys.D1))
             {
                 _diceResult = _diceRoll[0] + _diceRoll[1];
+                _player.StepsCount = _diceResult;
                 _gameStep = GameStep.Third;
             }
             if (keyboardNewState.IsKeyDown(Keys.NumPad2) && !_keyboardOldState.IsKeyDown(Keys.NumPad2)
                 || keyboardNewState.IsKeyDown(Keys.D2) && !_keyboardOldState.IsKeyDown(Keys.D2))
             {
                 _diceResult = Math.Abs(_diceRoll[0] - _diceRoll[1]);
+                _player.StepsCount = _diceResult;
                 _gameStep = GameStep.Third;
             }
         }
 
         private void HandleThirdStep(KeyboardState keyboardNewState)
         {
+            if (_player.StepsCount < 1)
+                _gameStep = GameStep.First;
             //PlayerMovement
             if (keyboardNewState.IsKeyDown(Keys.Up) && !_keyboardOldState.IsKeyDown(Keys.Up))
             {
                 _player.MoveUp();
-                _gameStep = GameStep.First;
             }
             if (keyboardNewState.IsKeyDown(Keys.Down) && !_keyboardOldState.IsKeyDown(Keys.Down))
             {
                 _player.MoveDown();
-                _gameStep = GameStep.First;
             }
 
             if (keyboardNewState.IsKeyDown(Keys.Left) && !_keyboardOldState.IsKeyDown(Keys.Left))
             {
                 _player.MoveLeft();
-                _gameStep = GameStep.First;
             }
             if (keyboardNewState.IsKeyDown(Keys.Right) && !_keyboardOldState.IsKeyDown(Keys.Right))
             {
                 _player.MoveRight();
-                _gameStep = GameStep.First;
             }
 
             //Calcualte right cell

@@ -12,10 +12,14 @@ namespace RgbJourney
         public int Y { get; set; }
         public int FieldX { get; set; }
         public int FieldY { get; set; }
+
+        public int StepsCount = 0;
+
         private int _cellSize;
         private int _cellSpacing;
         private Texture2D playerTexture;
         private SpriteBatch _spriteBatch;
+
 
         public Player(int stepSize, int borderThickness, int fieldSize, SpriteBatch spriteBatch, GraphicsDevice graphicsDevice)
         {
@@ -40,23 +44,27 @@ namespace RgbJourney
         {
             X = X + (_cellSize + _cellSpacing);
             FieldX += 1;
+            StepsCount--;
         }
 
         public void MoveLeft()
         {
             X = X - (_cellSize + _cellSpacing);
             FieldX -= 1;
+            StepsCount--;
         }
 
         public void MoveUp()
         {
             Y = Y - (_cellSize + _cellSpacing);
             FieldY -= 1;
+            StepsCount--;
         }
         public void MoveDown()
         {
             Y = Y + (_cellSize + _cellSpacing);
             FieldY += 1;
+            StepsCount--;
         }
     }
 }
