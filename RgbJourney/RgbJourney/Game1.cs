@@ -42,8 +42,8 @@ namespace RgbJourney
             _field = _fieldGenerator.GenerateArray(_fieldSize);
             _player = new Player(_cellSize, _cellSpacing, _fieldSize, _spriteBatch, GraphicsDevice);
             _manager = new UIManager(_cellSize, _cellSpacing,
-                GraphicsDevice.Adapter.CurrentDisplayMode.Width,
-                GraphicsDevice.Adapter.CurrentDisplayMode.Height, _spriteBatch, GraphicsDevice, Content);
+                GraphicsDevice.Viewport.Width,
+                GraphicsDevice.Viewport.Height, _spriteBatch, GraphicsDevice, Content);
             // TODO: use this.Content to load your game content here
         }
 
@@ -82,6 +82,7 @@ namespace RgbJourney
             _fieldGenerator.DrawField(_spriteBatch, GraphicsDevice, _field);
             _player.Draw();
             _manager.Draw();
+            _manager.DrawSelectedSquare(CustomColors.Red);
             _spriteBatch.End();
 
 
