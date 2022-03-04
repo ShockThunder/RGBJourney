@@ -6,10 +6,7 @@ namespace RgbJourney
 {
     public class CellModel
     {
-        public int X { get; set; }
-        public int Y { get; set; }
+        public Position Position { get; set; } = new Position();
         public CustomColor Color { get; set; }
-        public int FieldX { get; set; }
-        public int FieldY { get; set; }
     }
 }

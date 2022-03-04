@@ -9,7 +9,7 @@ namespace RgbJourney
     {
         private GraphicsDeviceManager _graphics;
         private SpriteBatch _spriteBatch;
-        private FieldGenerator _fieldGenerator;
+        private FieldManager _fieldManager;
         private int[,] _field;
         private int _fieldSize = 15;
         private int _cellSize = 20;
@@ -21,6 +21,7 @@ namespace RgbJourney
         private int[] _diceRoll = new int[2] { 0, 0 };
         private int _diceResult = 0;
         private bool _isDiceRolled = false;
+        private bool _illegalTurn = false;
         private Random _random = new Random();
 
         private KeyboardState _keyboardOldState = Keyboard.GetState();
@@ -43,8 +44,8 @@ namespace RgbJourney
         protected override void LoadContent()
         {
             _spriteBatch = new SpriteBatch(GraphicsDevice);
-            _fieldGenerator = new FieldGenerator(_cellSize, _cellSpacing, _spriteBatch, GraphicsDevice, _random);
-            _field = _fieldGenerator.GenerateArray(_fieldSize);
+            _fieldManager = new FieldManager(_cellSize, _cellSpacing, _spriteBatch, GraphicsDevice, _random);
+            _field = _fieldManager.GenerateArray(_fieldSize);
             _player = new Player(_cellSize, _cellSpacing, _fieldSize, _spriteBatch, GraphicsDevice);
             _manager = new UIManager(_cellSize, _cellSpacing,
                 GraphicsDevice.Viewport.Width,
@@ -88,7 +89,7 @@ namespace RgbJourney
 
             _spriteBatch.Begin();
             // TODO: Add your drawing code here
-            _fieldGenerator.DrawField(_field);
+            _fieldManager.DrawField(_field);
             _player.Draw();
             _manager.Draw();
             if (_gameStep != GameStep.First)
@@ -96,6 +97,8 @@ namespace RgbJourney
                 _manager.DrawSelectedSquare(_selectedColor);
                 _manager.DrawDiceResult(_diceRoll, _diceResult);
             }
+            if (_illegalTurn)
+                _manager.DrawIllegalTurn();
 
             _spriteBatch.End();
 
@@ -126,6 +129,7 @@ namespace RgbJourney
 
             _diceResult = 0;
             _isDiceRolled = false;
+            _illegalTurn = false;
         }
 
         private void HandleSecondStep(KeyboardState keyboardNewState)
@@ -141,6 +145,7 @@ namespace RgbJourney
             {
                 _diceResult = _diceRoll[0] + _diceRoll[1];
                 _player.StepsCount = _diceResult;
+                _fieldManager.OldPlayerPosition = new Position(_player.Position);
                 _gameStep = GameStep.Third;
             }
             if (keyboardNewState.IsKeyDown(Keys.NumPad2) && !_keyboardOldState.IsKeyDown(Keys.NumPad2)
@@ -148,6 +153,7 @@ namespace RgbJourney
             {
                 _diceResult = Math.Abs(_diceRoll[0] - _diceRoll[1]);
                 _player.StepsCount = _diceResult;
+                _fieldManager.OldPlayerPosition = new Position(_player.Position);
                 _gameStep = GameStep.Third;
             }
         }
@@ -155,7 +161,17 @@ namespace RgbJourney
         private void HandleThirdStep(KeyboardState keyboardNewState)
         {
             if (_player.StepsCount < 1)
-                _gameStep = GameStep.First;
+            {
+                var canEndTurn = _fieldManager.CanEndTurn(_player.Position, _selectedColor);
+                if(canEndTurn)
+                    _gameStep = GameStep.First;
+                else
+                {
+                    _player.Position = new Position(_fieldManager.OldPlayerPosition);
+                    _player.StepsCount = _diceResult;
+                    _illegalTurn = true;
+                }
+            }
             //PlayerMovement
             if (keyboardNewState.IsKeyDown(Keys.Up) && !_keyboardOldState.IsKeyDown(Keys.Up))
             {

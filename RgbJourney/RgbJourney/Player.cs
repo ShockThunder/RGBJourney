@@ -8,10 +8,7 @@ namespace RgbJourney
 {
     public class Player
     {
-        public int X { get; set; }
-        public int Y { get; set; }
-        public int FieldX { get; set; }
-        public int FieldY { get; set; }
+        public Position Position { get; set; } = new Position();
 
         public int StepsCount = 0;
 
@@ -23,47 +20,47 @@ namespace RgbJourney
 
         public Player(int stepSize, int borderThickness, int fieldSize, SpriteBatch spriteBatch, GraphicsDevice graphicsDevice)
         {
-            X = fieldSize / 2 * (stepSize + borderThickness);
-            Y = fieldSize / 2 * (stepSize + borderThickness);
+            Position.X = fieldSize / 2 * (stepSize + borderThickness);
+            Position.Y = fieldSize / 2 * (stepSize + borderThickness);
             _cellSize = stepSize;
             _cellSpacing = borderThickness;
             _spriteBatch = spriteBatch;
             playerTexture = new Texture2D(graphicsDevice, 1, 1);
             playerTexture.SetData(new Color[] { Color.CornflowerBlue });
-            FieldX = fieldSize / 2 + 1;
-            FieldY = fieldSize / 2 + 1;
+            Position.FieldX = fieldSize / 2 + 1;
+            Position.FieldY = fieldSize / 2 + 1;
         }
 
         public void Draw()
         {
-            var rec = new Rectangle(X, Y, _cellSize, _cellSize);
+            var rec = new Rectangle(Position.X, Position.Y, _cellSize, _cellSize);
             _spriteBatch.Draw(playerTexture, rec, Color.CornflowerBlue);
         }
 
         public void MoveRight()
         {
-            X = X + (_cellSize + _cellSpacing);
-            FieldX += 1;
+            Position.X = Position.X + (_cellSize + _cellSpacing);
+            Position.FieldX += 1;
             StepsCount--;
         }
 
         public void MoveLeft()
         {
-            X = X - (_cellSize + _cellSpacing);
-            FieldX -= 1;
+            Position.X = Position.X - (_cellSize + _cellSpacing);
+            Position.FieldX -= 1;
             StepsCount--;
         }
 
         public void MoveUp()
         {
-            Y = Y - (_cellSize + _cellSpacing);
-            FieldY -= 1;
+            Position.Y = Position.Y - (_cellSize + _cellSpacing);
+            Position.FieldY -= 1;
             StepsCount--;
         }
         public void MoveDown()
         {
-            Y = Y + (_cellSize + _cellSpacing);
-            FieldY += 1;
+            Position.Y = Position.Y + (_cellSize + _cellSpacing);
+            Position.FieldY += 1;
             StepsCount--;
         }
     }

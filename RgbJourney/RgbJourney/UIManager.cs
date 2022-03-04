@@ -53,7 +53,7 @@ namespace RgbJourney
             string colorMsg = "Select color";
             spriteBatch.DrawString(font, colorMsg, new Vector2(screenWidth / 2, screenHeight / 10 - cellSize * 2), Color.White);
 
-            string keysMessage = "1 - RED, 2 - GREEN, 3 - BLUE";
+            string keysMessage = "1 - RED, 2 - BLUE, 3 - GREEN";
             spriteBatch.DrawString(font, keysMessage, new Vector2(screenWidth / 2, screenHeight / 10), Color.White);
 
             var redRect = new Rectangle(screenWidth / 2, screenHeight / 10 + cellSize * 2, cellSize, cellSize);
@@ -97,6 +97,14 @@ namespace RgbJourney
             string diceMessage = $"You rolled {diceRoll[0]} and {diceRoll[1]}. 1 - sum, 2 - substract.";
             spriteBatch.DrawString(font, diceMessage, new Vector2(screenWidth / 2, screenHeight / 10 + cellSize * 6), Color.White);
             spriteBatch.DrawString(font, $"Roll result - {diceResult}", new Vector2(screenWidth / 2, screenHeight / 10 + cellSize * 8), Color.White);
+        }
+
+        public void DrawIllegalTurn()
+        {
+            string message1 = $"Non legal turn!";
+            string message2 = $"You should end turn in selected color!";
+            spriteBatch.DrawString(font, message1, new Vector2(screenWidth / 2, screenHeight / 10 + cellSize * 10), Color.Coral);
+            spriteBatch.DrawString(font, message2, new Vector2(screenWidth / 2, screenHeight / 10 + cellSize * 12), Color.Coral);
         }
     }
 }

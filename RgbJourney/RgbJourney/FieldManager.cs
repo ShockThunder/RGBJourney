@@ -2,10 +2,11 @@
 using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace RgbJourney
 {
-    public class FieldGenerator
+    public class FieldManager
     {
         private int cellSize;
         private int cellSpacing;
@@ -16,7 +17,9 @@ namespace RgbJourney
         private Texture2D greenTexture;
         private Random random;
 
-        public FieldGenerator(int cellSize, int cellSpacing, 
+        public Position OldPlayerPosition = new Position();
+
+        public FieldManager(int cellSize, int cellSpacing,
             SpriteBatch spriteBatch, GraphicsDevice graphicsDevice, Random random)
         {
             this.cellSize = cellSize;
@@ -67,7 +70,7 @@ namespace RgbJourney
         }
 
         public void DrawField(int[,] field)
-        {            
+        {
             var defaultRect = new Rectangle(0, 0, cellSize, cellSize);
 
             for (int i = 0; i < field.GetLength(0); i++)
@@ -119,11 +122,24 @@ namespace RgbJourney
 
         private CellModel BuildCell(int i, int j, CustomColor color) => new CellModel
         {
-            FieldX = i,
-            FieldY = j,
+            Position = new Position
+            {
+                FieldX = i,
+                FieldY = j,
+                X = i * (cellSize + cellSpacing),
+                Y = j * (cellSize + cellSpacing)
+            },
             Color = color,
-            X = i * (cellSize + cellSpacing),
-            Y = j * (cellSize + cellSpacing)
         };
+
+        public bool CanEndTurn(Position playerPosition, CustomColor selectedColor)
+        {
+            var endCell = cells.FirstOrDefault(x => x.Position.X == playerPosition.X
+                                                && x.Position.Y == playerPosition.Y);
+            if (endCell.Color == selectedColor)
+                return true;
+
+            return false;
+        }
     }
 }
