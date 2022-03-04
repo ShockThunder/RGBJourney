@@ -106,5 +106,13 @@ namespace RgbJourney
             spriteBatch.DrawString(font, message1, new Vector2(screenWidth / 2, screenHeight / 10 + cellSize * 10), Color.Coral);
             spriteBatch.DrawString(font, message2, new Vector2(screenWidth / 2, screenHeight / 10 + cellSize * 12), Color.Coral);
         }
+
+        public void DrawWinText()
+        {
+            string message = "YOU WIN!";
+            spriteBatch.DrawString(font, message, new Vector2(screenWidth / 2, screenHeight / 2), Color.AliceBlue);
+            spriteBatch.DrawString(font, message, new Vector2(screenWidth / 2, screenHeight / 2 + cellSize * 2), Color.AliceBlue);
+            spriteBatch.DrawString(font, message, new Vector2(screenWidth / 2, screenHeight / 2 + cellSize * 4), Color.AliceBlue);
+        }
     }
 }

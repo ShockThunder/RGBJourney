@@ -18,6 +18,9 @@ namespace RgbJourney
         private Random random;
 
         public Position OldPlayerPosition = new Position();
+        public List<CellModel> cells = new List<CellModel>();
+        public List<CellModel> winCells = new List<CellModel>();
+
 
         public FieldManager(int cellSize, int cellSpacing,
             SpriteBatch spriteBatch, GraphicsDevice graphicsDevice, Random random)
@@ -38,7 +41,6 @@ namespace RgbJourney
             greenTexture.SetData(new Color[] { Color.Green });
         }
 
-        public List<CellModel> cells = new List<CellModel>();
         public int[,] GenerateArray(int arraySize)
         {
             var array = new int[arraySize, arraySize];
@@ -49,22 +51,35 @@ namespace RgbJourney
                 {
                     var randomNumber = random.Next(0, 3);
                     array[i, j] = randomNumber;
+                    var cell = BuildCell(i, j, CustomColor.Red);
                     switch (randomNumber)
                     {
                         case 0:
-                            cells.Add(BuildCell(i, j, CustomColor.Red));
+                            cell.Color = CustomColor.Red;
                             break;
                         case 1:
-                            cells.Add(BuildCell(i, j, CustomColor.Blue));
+                            cell.Color = CustomColor.Blue;
                             break;
                         case 2:
-                            cells.Add(BuildCell(i, j, CustomColor.Green));
+                            cell.Color = CustomColor.Green;
                             break;
                         default:
                             break;
                     }
+                    if (i == 0 && j == 0
+                        || i == 0 && j == arraySize - 1
+                        || i == arraySize - 1 && j == 0
+                        || i == arraySize - 1 && j == arraySize - 1)
+                        cell.Color = CustomColor.White;
+
+                    cells.Add(cell);
                 }
             }
+
+            winCells.Add(BuildCell(0, 0, CustomColor.White));
+            winCells.Add(BuildCell(0, arraySize - 1, CustomColor.White));
+            winCells.Add(BuildCell(arraySize - 1, 0, CustomColor.White));
+            winCells.Add(BuildCell(arraySize - 1, arraySize - 1, CustomColor.White));
 
             return array;
         }
@@ -136,10 +151,13 @@ namespace RgbJourney
         {
             var endCell = cells.FirstOrDefault(x => x.Position.X == playerPosition.X
                                                 && x.Position.Y == playerPosition.Y);
-            if (endCell.Color == selectedColor)
+            if (endCell.Color == selectedColor || endCell.Color == CustomColor.White)
                 return true;
 
             return false;
         }
+
+        public bool CheckWinCondition(Position playerPosition) =>
+            winCells.Any(x => x.Position.X == playerPosition.X && x.Position.Y == playerPosition.Y);
     }
 }

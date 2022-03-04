@@ -99,7 +99,8 @@ namespace RgbJourney
             }
             if (_illegalTurn)
                 _manager.DrawIllegalTurn();
-
+            if (_gameStep == GameStep.Fourth)
+                _manager.DrawWinText();
             _spriteBatch.End();
 
 
@@ -163,8 +164,13 @@ namespace RgbJourney
             if (_player.StepsCount < 1)
             {
                 var canEndTurn = _fieldManager.CanEndTurn(_player.Position, _selectedColor);
-                if(canEndTurn)
-                    _gameStep = GameStep.First;
+                if (canEndTurn)
+                {
+                    if (_fieldManager.CheckWinCondition(_player.Position))
+                        _gameStep = GameStep.Fourth;
+                    else
+                        _gameStep = GameStep.First;
+                }
                 else
                 {
                     _player.Position = new Position(_fieldManager.OldPlayerPosition);
