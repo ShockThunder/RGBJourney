@@ -31,14 +31,14 @@ namespace RgbJourney
             _graphicsDevice = graphicsDevice;
             this.random = random;
 
-            redTexture = new Texture2D(graphicsDevice, 1, 1);
-            redTexture.SetData(new Color[] { Color.Red });
+            redTexture = new Texture2D(_graphicsDevice, 1, 1);
+            redTexture.SetData(new Color[] { Color.LightCoral });
 
-            blueTexture = new Texture2D(graphicsDevice, 1, 1);
-            blueTexture.SetData(new Color[] { Color.Blue });
+            blueTexture = new Texture2D(_graphicsDevice, 1, 1);
+            blueTexture.SetData(new Color[] { Color.DodgerBlue });
 
-            greenTexture = new Texture2D(graphicsDevice, 1, 1);
-            greenTexture.SetData(new Color[] { Color.Green });
+            greenTexture = new Texture2D(_graphicsDevice, 1, 1);
+            greenTexture.SetData(new Color[] { Color.LightGreen });
         }
 
         public int[,] GenerateArray(int arraySize)
@@ -86,6 +86,12 @@ namespace RgbJourney
 
         public void DrawField(int[,] field)
         {
+            var bigRect = new Rectangle(0, 0, (cellSize + cellSpacing) * field.GetLength(0), (cellSize + cellSpacing) * field.GetLength(0));
+            var backTexture = new Texture2D(_graphicsDevice, 1, 1);
+            backTexture.SetData(new Color[] { Color.Black });
+            _spriteBatch.Draw(backTexture, bigRect, Color.Black);
+
+
             var defaultRect = new Rectangle(0, 0, cellSize, cellSize);
 
             for (int i = 0; i < field.GetLength(0); i++)
@@ -98,13 +104,13 @@ namespace RgbJourney
                     switch (field[i, j])
                     {
                         case 0:
-                            _spriteBatch.Draw(redTexture, rect, Color.DarkRed);
+                            _spriteBatch.Draw(redTexture, rect, Color.LightCoral);
                             break;
                         case 1:
-                            _spriteBatch.Draw(blueTexture, rect, Color.DarkBlue);
+                            _spriteBatch.Draw(blueTexture, rect, Color.DodgerBlue);
                             break;
                         case 2:
-                            _spriteBatch.Draw(greenTexture, rect, Color.Green);
+                            _spriteBatch.Draw(greenTexture, rect, Color.LightGreen);
                             break;
                     }
                 }

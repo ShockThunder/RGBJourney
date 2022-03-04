@@ -26,7 +26,7 @@ namespace RgbJourney
             _cellSpacing = borderThickness;
             _spriteBatch = spriteBatch;
             playerTexture = new Texture2D(graphicsDevice, 1, 1);
-            playerTexture.SetData(new Color[] { Color.CornflowerBlue });
+            playerTexture.SetData(new Color[] { Color.CadetBlue });
             Position.FieldX = fieldSize / 2 + 1;
             Position.FieldY = fieldSize / 2 + 1;
         }
@@ -34,7 +34,7 @@ namespace RgbJourney
         public void Draw()
         {
             var rec = new Rectangle(Position.X, Position.Y, _cellSize, _cellSize);
-            _spriteBatch.Draw(playerTexture, rec, Color.CornflowerBlue);
+            _spriteBatch.Draw(playerTexture, rec, Color.CadetBlue);
         }
 
         public void MoveRight()

@@ -42,13 +42,13 @@ namespace RgbJourney
         public void Draw()
         {
             var redTexture = new Texture2D(graphicsDevice, 1, 1);
-            redTexture.SetData(new Color[] { Color.Red });
+            redTexture.SetData(new Color[] { Color.LightCoral });
 
             var blueTexture = new Texture2D(graphicsDevice, 1, 1);
-            blueTexture.SetData(new Color[] { Color.Blue });
+            blueTexture.SetData(new Color[] { Color.DodgerBlue });
 
             var greenTexture = new Texture2D(graphicsDevice, 1, 1);
-            greenTexture.SetData(new Color[] { Color.Green });
+            greenTexture.SetData(new Color[] { Color.LightGreen });
 
             string colorMsg = "Select color";
             spriteBatch.DrawString(font, colorMsg, new Vector2(screenWidth / 2, screenHeight / 10 - cellSize * 2), Color.White);
@@ -60,11 +60,11 @@ namespace RgbJourney
             var blueRect = new Rectangle(screenWidth / 2 + cellSize * 2, screenHeight / 10 + cellSize * 2, cellSize, cellSize);
             var greenRect = new Rectangle(screenWidth / 2 + cellSize * 4, screenHeight / 10 + cellSize * 2, cellSize, cellSize);
 
-            spriteBatch.Draw(redTexture, redRect, Color.DarkRed);
+            spriteBatch.Draw(redTexture, redRect, Color.LightCoral);
 
 
-            spriteBatch.Draw(blueTexture, blueRect, Color.DarkBlue);
-            spriteBatch.Draw(greenTexture, greenRect, Color.Green);
+            spriteBatch.Draw(blueTexture, blueRect, Color.DodgerBlue);
+            spriteBatch.Draw(greenTexture, greenRect, Color.LightGreen);
         }
 
         public void DrawSelectedSquare(CustomColor color)
