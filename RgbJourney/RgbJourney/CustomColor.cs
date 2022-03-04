@@ -4,7 +4,7 @@ using System.Text;
 
 namespace RgbJourney
 {
-    public enum CustomColors
+    public enum CustomColor
     {
         Red = 0,
         Blue = 1,

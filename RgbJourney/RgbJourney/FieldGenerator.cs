@@ -1,45 +1,73 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
+using System.Collections.Generic;
 
 namespace RgbJourney
 {
     public class FieldGenerator
     {
-        public FieldGenerator(int cellSize, int cellSpacing)
+        private int cellSize;
+        private int cellSpacing;
+        private readonly SpriteBatch _spriteBatch;
+        private readonly GraphicsDevice _graphicsDevice;
+        private Texture2D redTexture;
+        private Texture2D blueTexture;
+        private Texture2D greenTexture;
+        private Random random;
+
+        public FieldGenerator(int cellSize, int cellSpacing, 
+            SpriteBatch spriteBatch, GraphicsDevice graphicsDevice, Random random)
         {
             this.cellSize = cellSize;
             this.cellSpacing = cellSpacing;
+            _spriteBatch = spriteBatch;
+            _graphicsDevice = graphicsDevice;
+            this.random = random;
+
+            redTexture = new Texture2D(graphicsDevice, 1, 1);
+            redTexture.SetData(new Color[] { Color.Red });
+
+            blueTexture = new Texture2D(graphicsDevice, 1, 1);
+            blueTexture.SetData(new Color[] { Color.Blue });
+
+            greenTexture = new Texture2D(graphicsDevice, 1, 1);
+            greenTexture.SetData(new Color[] { Color.Green });
         }
-        private int cellSize;
-        private int cellSpacing;
+
+        public List<CellModel> cells = new List<CellModel>();
         public int[,] GenerateArray(int arraySize)
         {
-            var random = new Random();
             var array = new int[arraySize, arraySize];
 
             for (int i = 0; i < arraySize; i++)
             {
                 for (int j = 0; j < arraySize; j++)
                 {
-                    array[i, j] = random.Next(3);
+                    var randomNumber = random.Next(0, 3);
+                    array[i, j] = randomNumber;
+                    switch (randomNumber)
+                    {
+                        case 0:
+                            cells.Add(BuildCell(i, j, CustomColor.Red));
+                            break;
+                        case 1:
+                            cells.Add(BuildCell(i, j, CustomColor.Blue));
+                            break;
+                        case 2:
+                            cells.Add(BuildCell(i, j, CustomColor.Green));
+                            break;
+                        default:
+                            break;
+                    }
                 }
             }
 
             return array;
         }
 
-        public void DrawField(SpriteBatch spriteBatch, GraphicsDevice graphicsDevice, int[,] field)
-        {
-            var redTexture = new Texture2D(graphicsDevice, 1, 1);
-            redTexture.SetData(new Color[] { Color.Red });
-
-            var blueTexture = new Texture2D(graphicsDevice, 1, 1);
-            blueTexture.SetData(new Color[] { Color.Blue });
-
-            var greenTexture = new Texture2D(graphicsDevice, 1, 1);
-            greenTexture.SetData(new Color[] { Color.Green });
-
+        public void DrawField(int[,] field)
+        {            
             var defaultRect = new Rectangle(0, 0, cellSize, cellSize);
 
             for (int i = 0; i < field.GetLength(0); i++)
@@ -52,41 +80,50 @@ namespace RgbJourney
                     switch (field[i, j])
                     {
                         case 0:
-                            spriteBatch.Draw(redTexture, rect, Color.DarkRed);
+                            _spriteBatch.Draw(redTexture, rect, Color.DarkRed);
                             break;
                         case 1:
-                            spriteBatch.Draw(blueTexture, rect, Color.DarkBlue);
+                            _spriteBatch.Draw(blueTexture, rect, Color.DarkBlue);
                             break;
                         case 2:
-                            spriteBatch.Draw(greenTexture, rect, Color.Green);
+                            _spriteBatch.Draw(greenTexture, rect, Color.Green);
                             break;
                     }
                 }
             }
 
-            var whiteTexture = new Texture2D(graphicsDevice, 1, 1);
+            var whiteTexture = new Texture2D(_graphicsDevice, 1, 1);
             whiteTexture.SetData(new Color[] { Color.White });
             defaultRect.X = field.GetLength(0) / 2 * (cellSize + cellSpacing);
             defaultRect.Y = field.GetLength(0) / 2 * (cellSize + cellSpacing);
-            spriteBatch.Draw(whiteTexture, defaultRect, Color.White);
+            _spriteBatch.Draw(whiteTexture, defaultRect, Color.White);
 
             // Fill corners
             defaultRect.X = 0;
             defaultRect.Y = 0;
-            spriteBatch.Draw(whiteTexture, defaultRect, Color.White);
+            _spriteBatch.Draw(whiteTexture, defaultRect, Color.White);
 
             defaultRect.X = 0;
             defaultRect.Y = (field.GetLength(0) - 1) * (cellSize + cellSpacing);
-            spriteBatch.Draw(whiteTexture, defaultRect, Color.White);
+            _spriteBatch.Draw(whiteTexture, defaultRect, Color.White);
 
             defaultRect.X = (field.GetLength(0) - 1) * (cellSize + cellSpacing);
             defaultRect.Y = 0;
-            spriteBatch.Draw(whiteTexture, defaultRect, Color.White);
+            _spriteBatch.Draw(whiteTexture, defaultRect, Color.White);
 
             defaultRect.X = (field.GetLength(0) - 1) * (cellSize + cellSpacing);
             defaultRect.Y = (field.GetLength(0) - 1) * (cellSize + cellSpacing);
-            spriteBatch.Draw(whiteTexture, defaultRect, Color.White);
+            _spriteBatch.Draw(whiteTexture, defaultRect, Color.White);
 
         }
+
+        private CellModel BuildCell(int i, int j, CustomColor color) => new CellModel
+        {
+            FieldX = i,
+            FieldY = j,
+            Color = color,
+            X = i * (cellSize + cellSpacing),
+            Y = j * (cellSize + cellSpacing)
+        };
     }
 }

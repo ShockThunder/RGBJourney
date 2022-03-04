@@ -67,18 +67,18 @@ namespace RgbJourney
             spriteBatch.Draw(greenTexture, greenRect, Color.Green);
         }
 
-        public void DrawSelectedSquare(CustomColors color)
+        public void DrawSelectedSquare(CustomColor color)
         {
             string colorName = string.Empty;
             Texture2D selectedTexture;
             switch (color)
             {
-                case CustomColors.Red:
+                case CustomColor.Red:
                     colorName = "RED";
                     break;
-                case CustomColors.Green:
+                case CustomColor.Green:
                     colorName = "GREEN"; break;
-                case CustomColors.Blue:
+                case CustomColor.Blue:
                     colorName = "BLUE"; break;
                 default:
                     break;
@@ -90,6 +90,13 @@ namespace RgbJourney
 
             //spriteBatch.Draw(greenTexture, greenRect, Color.Green);
 
+        }
+
+        public void DrawDiceResult(int[] diceRoll, int diceResult)
+        {
+            string diceMessage = $"You rolled {diceRoll[0]} and {diceRoll[1]}. 1 - sum, 2 - substract.";
+            spriteBatch.DrawString(font, diceMessage, new Vector2(screenWidth / 2, screenHeight / 10 + cellSize * 6), Color.White);
+            spriteBatch.DrawString(font, $"Roll result - {diceResult}", new Vector2(screenWidth / 2, screenHeight / 10 + cellSize * 8), Color.White);
         }
     }
 }
