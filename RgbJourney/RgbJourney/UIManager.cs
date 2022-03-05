@@ -10,7 +10,7 @@ namespace RgbJourney
     public class UIManager
     {
         public UIManager(int cellSize, int cellSpacing, int screenWidth,
-            int screenHeight, SpriteBatch spriteBatch, ResourceManager resourceManager)
+            int screenHeight, int fieldSize, SpriteBatch spriteBatch, ResourceManager resourceManager)
         {
             this.cellSize = cellSize;
             this.cellSpacing = cellSpacing;
@@ -18,35 +18,32 @@ namespace RgbJourney
             this.screenHeight = screenHeight;
             this.spriteBatch = spriteBatch;
             _resourceManager = resourceManager;
-
-            redSquare = new Rectangle(screenWidth / 2, screenHeight / 10 + cellSize * 2, cellSize, cellSize);
-            blueSquare = new Rectangle(screenWidth / 2 + cellSize * 2, screenHeight / 10 + cellSize * 2, cellSize, cellSize);
-            greenSquare = new Rectangle(screenWidth / 2 + cellSize * 4, screenHeight / 10 + cellSize * 2, cellSize, cellSize);
-
+            leftEdge = (cellSize + cellSpacing) * (fieldSize + 1);
         }
+
         private int cellSize;
         private int cellSpacing;
         private readonly int screenWidth;
         private readonly int screenHeight;
+        private int leftEdge;
         private readonly SpriteBatch spriteBatch;
         private readonly GraphicsDevice graphicsDevice;
         private readonly ResourceManager _resourceManager;
 
-        public Rectangle redSquare;
-        public Rectangle blueSquare;
-        public Rectangle greenSquare;
+
 
         public void Draw()
         {
-            string colorMsg = "Select color";
-            spriteBatch.DrawString(_resourceManager.Font, colorMsg, new Vector2(screenWidth / 2, screenHeight / 10 - cellSize * 2), Color.White);
+            string colorMsg = "Select target";
+            spriteBatch.DrawString(_resourceManager.Font, colorMsg, new Vector2(leftEdge, screenHeight / 10 - cellSize), Color.Black);
 
-            string keysMessage = "1 - RED, 2 - BLUE, 3 - GREEN";
-            spriteBatch.DrawString(_resourceManager.Font, keysMessage, new Vector2(screenWidth / 2, screenHeight / 10), Color.White);
+            spriteBatch.DrawString(_resourceManager.Font, "1", new Vector2(leftEdge, screenHeight / 10), Color.Black);
+            spriteBatch.DrawString(_resourceManager.Font, "2", new Vector2(leftEdge + cellSize * 2, screenHeight / 10), Color.Black);
+            spriteBatch.DrawString(_resourceManager.Font, "3", new Vector2(leftEdge + cellSize * 4, screenHeight / 10), Color.Black);
 
-            var redRect = new Rectangle(screenWidth / 2, screenHeight / 10 + cellSize * 2, cellSize, cellSize);
-            var blueRect = new Rectangle(screenWidth / 2 + cellSize * 2, screenHeight / 10 + cellSize * 2, cellSize, cellSize);
-            var greenRect = new Rectangle(screenWidth / 2 + cellSize * 4, screenHeight / 10 + cellSize * 2, cellSize, cellSize);
+            var redRect = new Rectangle(leftEdge, screenHeight / 10 + cellSize, cellSize, cellSize);
+            var blueRect = new Rectangle(leftEdge + cellSize * 2, screenHeight / 10 + cellSize, cellSize, cellSize);
+            var greenRect = new Rectangle(leftEdge + cellSize * 4, screenHeight / 10 + cellSize, cellSize, cellSize);
 
             spriteBatch.Draw(_resourceManager.RedTexture, redRect, Color.White);
             spriteBatch.Draw(_resourceManager.BlueTexture, blueRect, Color.White);
@@ -59,40 +56,39 @@ namespace RgbJourney
             switch (color)
             {
                 case CustomColor.Red:
-                    colorName = "RED";
+                    colorName = "1";
                     break;
-                case CustomColor.Green:
-                    colorName = "GREEN"; break;
                 case CustomColor.Blue:
-                    colorName = "BLUE"; break;
+                    colorName = "2"; break;
+                case CustomColor.Green:
+                    colorName = "3"; break;
                 default:
                     break;
             }
             string colorMsg = $"You selected {colorName}";
-            spriteBatch.DrawString(_resourceManager.Font, colorMsg, new Vector2(screenWidth / 2, screenHeight / 10 + cellSize * 4), Color.White);
+            spriteBatch.DrawString(_resourceManager.Font, colorMsg, new Vector2(leftEdge, screenHeight / 10 + cellSize * 2 + cellSize / 2), Color.Black);
         }
 
         public void DrawDiceResult(int[] diceRoll, int diceResult)
         {
-            string diceMessage = $"You rolled {diceRoll[0]} and {diceRoll[1]}. 1 - sum, 2 - substract.";
-            spriteBatch.DrawString(_resourceManager.Font, diceMessage, new Vector2(screenWidth / 2, screenHeight / 10 + cellSize * 6), Color.White);
-            spriteBatch.DrawString(_resourceManager.Font, $"Roll result - {diceResult}", new Vector2(screenWidth / 2, screenHeight / 10 + cellSize * 8), Color.White);
+            string diceMessage = $"You rolled {diceRoll[0]} and {diceRoll[1]}";
+            string hintMessage = " 1 - sum, 2 - sub.";
+            spriteBatch.DrawString(_resourceManager.Font, diceMessage, new Vector2(leftEdge, screenHeight / 10 + cellSize * 4), Color.Black);
+            spriteBatch.DrawString(_resourceManager.Font, hintMessage, new Vector2(leftEdge, screenHeight / 10 + cellSize * 5), Color.Black);
+            spriteBatch.DrawString(_resourceManager.Font, $"Roll result - {diceResult}", new Vector2(leftEdge, screenHeight / 10 + cellSize * 6), Color.Black);
         }
 
         public void DrawIllegalTurn()
         {
             string message1 = $"Non legal turn!";
-            string message2 = $"You should end turn in selected color!";
-            spriteBatch.DrawString(_resourceManager.Font, message1, new Vector2(screenWidth / 2, screenHeight / 10 + cellSize * 10), Color.Coral);
-            spriteBatch.DrawString(_resourceManager.Font, message2, new Vector2(screenWidth / 2, screenHeight / 10 + cellSize * 12), Color.Coral);
+            spriteBatch.DrawString(_resourceManager.Font, message1, new Vector2(leftEdge, screenHeight / 10 + cellSize * 10), Color.Red);
         }
 
         public void DrawWinText()
         {
             string message = "YOU WIN!";
-            spriteBatch.DrawString(_resourceManager.Font, message, new Vector2(screenWidth / 2, screenHeight / 2), Color.AliceBlue);
-            spriteBatch.DrawString(_resourceManager.Font, message, new Vector2(screenWidth / 2, screenHeight / 2 + cellSize * 2), Color.AliceBlue);
-            spriteBatch.DrawString(_resourceManager.Font, message, new Vector2(screenWidth / 2, screenHeight / 2 + cellSize * 4), Color.AliceBlue);
+            spriteBatch.DrawString(_resourceManager.WinFont, message, new Vector2(screenWidth / 3, screenHeight / 3), Color.Black, 0.0f, new Vector2(0 ,0), 1f, SpriteEffects.None, 0);
+            spriteBatch.DrawString(_resourceManager.WinFont, message, new Vector2(screenWidth / 3 + 5, screenHeight / 3 + 5), Color.White, 0.0f, new Vector2(0 ,0), 1f, SpriteEffects.None, 0);
         }
     }
 }

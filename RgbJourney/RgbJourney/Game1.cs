@@ -12,7 +12,7 @@ namespace RgbJourney
         private FieldManager _fieldManager;
         private int[,] _field;
         private int _fieldSize = 15;
-        private int _cellSize = 20;
+        private int _cellSize = 29;
         private int _cellSpacing = 2;
         private Player _player;
         private UIManager _manager;
@@ -51,7 +51,7 @@ namespace RgbJourney
             _player = new Player(_cellSize, _cellSpacing, _fieldSize, _spriteBatch, _resourceManager);
             _manager = new UIManager(_cellSize, _cellSpacing,
                 GraphicsDevice.Viewport.Width,
-                GraphicsDevice.Viewport.Height, _spriteBatch, _resourceManager);
+                GraphicsDevice.Viewport.Height, _fieldSize, _spriteBatch, _resourceManager);
             // TODO: use this.Content to load your game content here
         }
 
@@ -86,10 +86,12 @@ namespace RgbJourney
 
         protected override void Draw(GameTime gameTime)
         {
-            GraphicsDevice.Clear(Color.CornflowerBlue);
+            GraphicsDevice.Clear(Color.Brown);
 
             _spriteBatch.Begin();
             // TODO: Add your drawing code here
+
+
             _fieldManager.DrawField(_field);
             _player.Draw();
             _manager.Draw();
@@ -102,6 +104,7 @@ namespace RgbJourney
                 _manager.DrawIllegalTurn();
             if (_gameStep == GameStep.Fourth)
                 _manager.DrawWinText();
+
             _spriteBatch.End();
 
 
@@ -131,7 +134,6 @@ namespace RgbJourney
 
             _diceResult = 0;
             _isDiceRolled = false;
-            _illegalTurn = false;
         }
 
         private void HandleSecondStep(KeyboardState keyboardNewState)
@@ -182,19 +184,27 @@ namespace RgbJourney
             //PlayerMovement
             if (keyboardNewState.IsKeyDown(Keys.Up) && !_keyboardOldState.IsKeyDown(Keys.Up))
             {
+                _illegalTurn = false;
+
                 _player.MoveUp();
             }
             if (keyboardNewState.IsKeyDown(Keys.Down) && !_keyboardOldState.IsKeyDown(Keys.Down))
             {
+                _illegalTurn = false;
+
                 _player.MoveDown();
             }
 
             if (keyboardNewState.IsKeyDown(Keys.Left) && !_keyboardOldState.IsKeyDown(Keys.Left))
             {
+                _illegalTurn = false;
+
                 _player.MoveLeft();
             }
             if (keyboardNewState.IsKeyDown(Keys.Right) && !_keyboardOldState.IsKeyDown(Keys.Right))
             {
+                _illegalTurn = false;
+
                 _player.MoveRight();
             }
 

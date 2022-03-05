@@ -74,10 +74,17 @@ namespace RgbJourney
 
         public void DrawField(int[,] field)
         {
-            var bigRect = new Rectangle(0, 0, (_cellSize + _cellSpacing) * field.GetLength(0), (_cellSize + _cellSpacing) * field.GetLength(0));
-            _spriteBatch.Draw(_resourceManager.BackTexture, bigRect, Color.White);
+            // Draw back texture
+            for (int i = 0; i < 7; i++)
+            {
+                for (int j = 0; j < 4; j++)
+                {
+                    var sourceRec = new Rectangle(0, 0, 256, 256);
+                    _spriteBatch.Draw(_resourceManager.BackTexture, new Vector2(0 + 128 * i, 0 + 128 * j), sourceRec, Color.White, 0.0f, new Vector2(0), 0.5f, SpriteEffects.None, 0);
+                }
+            }
 
-
+            // Draw main field
             var defaultRect = new Rectangle(0, 0, _cellSize, _cellSize);
 
             for (int i = 0; i < field.GetLength(0); i++)

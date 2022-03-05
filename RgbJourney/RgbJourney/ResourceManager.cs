@@ -17,34 +17,29 @@ namespace RgbJourney
         public Texture2D BackTexture { get; set; }
 
         public SpriteFont Font { get; set; }
+        public SpriteFont WinFont { get; set; }
 
-        private GraphicsDevice _graphicsDevice;
+
         private ContentManager _contentManager;
 
         public ResourceManager(GraphicsDevice graphicsDevice, ContentManager content)
         {
-            _graphicsDevice = graphicsDevice;
             _contentManager = content;
 
-            RedTexture = new Texture2D(_graphicsDevice, 1, 1);
-            RedTexture.SetData(new Color[] { Color.LightCoral });
+            RedTexture = _contentManager.Load<Texture2D>("RedTrap");
 
-            BlueTexture = new Texture2D(_graphicsDevice, 1, 1);
-            BlueTexture.SetData(new Color[] { Color.DodgerBlue });
+            BlueTexture = _contentManager.Load<Texture2D>("BlueTrap");
 
-            GreenTexture = new Texture2D(_graphicsDevice, 1, 1);
-            GreenTexture.SetData(new Color[] { Color.LightGreen });
+            GreenTexture = _contentManager.Load<Texture2D>("GreenTrap");
 
-            WhiteTexture = new Texture2D(_graphicsDevice, 1, 1);
-            WhiteTexture.SetData(new Color[] { Color.White });
+            WhiteTexture = _contentManager.Load<Texture2D>("WinCell");
 
-            PlayerTexture = new Texture2D(graphicsDevice, 1, 1);
-            PlayerTexture.SetData(new Color[] { Color.CadetBlue });
+            PlayerTexture = _contentManager.Load<Texture2D>("Player");
 
-            BackTexture = new Texture2D(_graphicsDevice, 1, 1);
-            BackTexture.SetData(new Color[] { Color.Black });
+            BackTexture = _contentManager.Load<Texture2D>("BackTexture");
 
-            Font = _contentManager.Load<SpriteFont>("Main");
+            Font = _contentManager.Load<SpriteFont>("PixelFont");
+            WinFont = _contentManager.Load<SpriteFont>("WinFont");
         }
     }
 }
