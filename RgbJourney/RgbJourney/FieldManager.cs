@@ -8,14 +8,11 @@ namespace RgbJourney
 {
     public class FieldManager
     {
-        private int cellSize;
-        private int cellSpacing;
+        private int _cellSize;
+        private int _cellSpacing;
         private readonly SpriteBatch _spriteBatch;
-        private readonly GraphicsDevice _graphicsDevice;
-        private Texture2D redTexture;
-        private Texture2D blueTexture;
-        private Texture2D greenTexture;
-        private Random random;
+        private readonly ResourceManager _resourceManager;
+        private Random _random;
 
         public Position OldPlayerPosition = new Position();
         public List<CellModel> cells = new List<CellModel>();
@@ -23,22 +20,13 @@ namespace RgbJourney
 
 
         public FieldManager(int cellSize, int cellSpacing,
-            SpriteBatch spriteBatch, GraphicsDevice graphicsDevice, Random random)
+            SpriteBatch spriteBatch, ResourceManager resourceManager, Random random)
         {
-            this.cellSize = cellSize;
-            this.cellSpacing = cellSpacing;
+            _cellSize = cellSize;
+            _cellSpacing = cellSpacing;
             _spriteBatch = spriteBatch;
-            _graphicsDevice = graphicsDevice;
-            this.random = random;
-
-            redTexture = new Texture2D(_graphicsDevice, 1, 1);
-            redTexture.SetData(new Color[] { Color.LightCoral });
-
-            blueTexture = new Texture2D(_graphicsDevice, 1, 1);
-            blueTexture.SetData(new Color[] { Color.DodgerBlue });
-
-            greenTexture = new Texture2D(_graphicsDevice, 1, 1);
-            greenTexture.SetData(new Color[] { Color.LightGreen });
+            _resourceManager = resourceManager;
+            _random = random;
         }
 
         public int[,] GenerateArray(int arraySize)
@@ -49,7 +37,7 @@ namespace RgbJourney
             {
                 for (int j = 0; j < arraySize; j++)
                 {
-                    var randomNumber = random.Next(0, 3);
+                    var randomNumber = _random.Next(0, 3);
                     array[i, j] = randomNumber;
                     var cell = BuildCell(i, j, CustomColor.Red);
                     switch (randomNumber)
@@ -86,59 +74,54 @@ namespace RgbJourney
 
         public void DrawField(int[,] field)
         {
-            var bigRect = new Rectangle(0, 0, (cellSize + cellSpacing) * field.GetLength(0), (cellSize + cellSpacing) * field.GetLength(0));
-            var backTexture = new Texture2D(_graphicsDevice, 1, 1);
-            backTexture.SetData(new Color[] { Color.Black });
-            _spriteBatch.Draw(backTexture, bigRect, Color.Black);
+            var bigRect = new Rectangle(0, 0, (_cellSize + _cellSpacing) * field.GetLength(0), (_cellSize + _cellSpacing) * field.GetLength(0));
+            _spriteBatch.Draw(_resourceManager.BackTexture, bigRect, Color.Black);
 
 
-            var defaultRect = new Rectangle(0, 0, cellSize, cellSize);
+            var defaultRect = new Rectangle(0, 0, _cellSize, _cellSize);
 
             for (int i = 0; i < field.GetLength(0); i++)
             {
                 for (int j = 0; j < field.GetLength(1); j++)
                 {
                     var rect = defaultRect;
-                    rect.X = i * (cellSize + cellSpacing);
-                    rect.Y = j * (cellSize + cellSpacing);
+                    rect.X = i * (_cellSize + _cellSpacing);
+                    rect.Y = j * (_cellSize + _cellSpacing);
                     switch (field[i, j])
                     {
                         case 0:
-                            _spriteBatch.Draw(redTexture, rect, Color.LightCoral);
+                            _spriteBatch.Draw(_resourceManager.RedTexture, rect, Color.LightCoral);
                             break;
                         case 1:
-                            _spriteBatch.Draw(blueTexture, rect, Color.DodgerBlue);
+                            _spriteBatch.Draw(_resourceManager.BlueTexture, rect, Color.DodgerBlue);
                             break;
                         case 2:
-                            _spriteBatch.Draw(greenTexture, rect, Color.LightGreen);
+                            _spriteBatch.Draw(_resourceManager.GreenTexture, rect, Color.LightGreen);
                             break;
                     }
                 }
             }
 
-            var whiteTexture = new Texture2D(_graphicsDevice, 1, 1);
-            whiteTexture.SetData(new Color[] { Color.White });
-            defaultRect.X = field.GetLength(0) / 2 * (cellSize + cellSpacing);
-            defaultRect.Y = field.GetLength(0) / 2 * (cellSize + cellSpacing);
-            _spriteBatch.Draw(whiteTexture, defaultRect, Color.White);
+            defaultRect.X = field.GetLength(0) / 2 * (_cellSize + _cellSpacing);
+            defaultRect.Y = field.GetLength(0) / 2 * (_cellSize + _cellSpacing);
+            _spriteBatch.Draw(_resourceManager.WhiteTexture, defaultRect, Color.White);
 
             // Fill corners
             defaultRect.X = 0;
             defaultRect.Y = 0;
-            _spriteBatch.Draw(whiteTexture, defaultRect, Color.White);
+            _spriteBatch.Draw(_resourceManager.WhiteTexture, defaultRect, Color.White);
 
             defaultRect.X = 0;
-            defaultRect.Y = (field.GetLength(0) - 1) * (cellSize + cellSpacing);
-            _spriteBatch.Draw(whiteTexture, defaultRect, Color.White);
+            defaultRect.Y = (field.GetLength(0) - 1) * (_cellSize + _cellSpacing);
+            _spriteBatch.Draw(_resourceManager.WhiteTexture, defaultRect, Color.White);
 
-            defaultRect.X = (field.GetLength(0) - 1) * (cellSize + cellSpacing);
+            defaultRect.X = (field.GetLength(0) - 1) * (_cellSize + _cellSpacing);
             defaultRect.Y = 0;
-            _spriteBatch.Draw(whiteTexture, defaultRect, Color.White);
+            _spriteBatch.Draw(_resourceManager.WhiteTexture, defaultRect, Color.White);
 
-            defaultRect.X = (field.GetLength(0) - 1) * (cellSize + cellSpacing);
-            defaultRect.Y = (field.GetLength(0) - 1) * (cellSize + cellSpacing);
-            _spriteBatch.Draw(whiteTexture, defaultRect, Color.White);
-
+            defaultRect.X = (field.GetLength(0) - 1) * (_cellSize + _cellSpacing);
+            defaultRect.Y = (field.GetLength(0) - 1) * (_cellSize + _cellSpacing);
+            _spriteBatch.Draw(_resourceManager.WhiteTexture, defaultRect, Color.White);
         }
 
         private CellModel BuildCell(int i, int j, CustomColor color) => new CellModel
@@ -147,8 +130,8 @@ namespace RgbJourney
             {
                 FieldX = i,
                 FieldY = j,
-                X = i * (cellSize + cellSpacing),
-                Y = j * (cellSize + cellSpacing)
+                X = i * (_cellSize + _cellSpacing),
+                Y = j * (_cellSize + _cellSpacing)
             },
             Color = color,
         };

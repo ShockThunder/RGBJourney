@@ -10,16 +10,14 @@ namespace RgbJourney
     public class UIManager
     {
         public UIManager(int cellSize, int cellSpacing, int screenWidth,
-            int screenHeight, SpriteBatch spriteBatch, GraphicsDevice graphicsDevice, ContentManager content)
+            int screenHeight, SpriteBatch spriteBatch, ResourceManager resourceManager)
         {
             this.cellSize = cellSize;
             this.cellSpacing = cellSpacing;
             this.screenWidth = screenWidth;
             this.screenHeight = screenHeight;
             this.spriteBatch = spriteBatch;
-            this.graphicsDevice = graphicsDevice;
-            this.content = content;
-            font = content.Load<SpriteFont>("Main");
+            _resourceManager = resourceManager;
 
             redSquare = new Rectangle(screenWidth / 2, screenHeight / 10 + cellSize * 2, cellSize, cellSize);
             blueSquare = new Rectangle(screenWidth / 2 + cellSize * 2, screenHeight / 10 + cellSize * 2, cellSize, cellSize);
@@ -32,8 +30,7 @@ namespace RgbJourney
         private readonly int screenHeight;
         private readonly SpriteBatch spriteBatch;
         private readonly GraphicsDevice graphicsDevice;
-        private readonly ContentManager content;
-        private SpriteFont font;
+        private readonly ResourceManager _resourceManager;
 
         public Rectangle redSquare;
         public Rectangle blueSquare;
@@ -41,30 +38,21 @@ namespace RgbJourney
 
         public void Draw()
         {
-            var redTexture = new Texture2D(graphicsDevice, 1, 1);
-            redTexture.SetData(new Color[] { Color.LightCoral });
-
-            var blueTexture = new Texture2D(graphicsDevice, 1, 1);
-            blueTexture.SetData(new Color[] { Color.DodgerBlue });
-
-            var greenTexture = new Texture2D(graphicsDevice, 1, 1);
-            greenTexture.SetData(new Color[] { Color.LightGreen });
-
             string colorMsg = "Select color";
-            spriteBatch.DrawString(font, colorMsg, new Vector2(screenWidth / 2, screenHeight / 10 - cellSize * 2), Color.White);
+            spriteBatch.DrawString(_resourceManager.Font, colorMsg, new Vector2(screenWidth / 2, screenHeight / 10 - cellSize * 2), Color.White);
 
             string keysMessage = "1 - RED, 2 - BLUE, 3 - GREEN";
-            spriteBatch.DrawString(font, keysMessage, new Vector2(screenWidth / 2, screenHeight / 10), Color.White);
+            spriteBatch.DrawString(_resourceManager.Font, keysMessage, new Vector2(screenWidth / 2, screenHeight / 10), Color.White);
 
             var redRect = new Rectangle(screenWidth / 2, screenHeight / 10 + cellSize * 2, cellSize, cellSize);
             var blueRect = new Rectangle(screenWidth / 2 + cellSize * 2, screenHeight / 10 + cellSize * 2, cellSize, cellSize);
             var greenRect = new Rectangle(screenWidth / 2 + cellSize * 4, screenHeight / 10 + cellSize * 2, cellSize, cellSize);
 
-            spriteBatch.Draw(redTexture, redRect, Color.LightCoral);
+            spriteBatch.Draw(_resourceManager.RedTexture, redRect, Color.LightCoral);
 
 
-            spriteBatch.Draw(blueTexture, blueRect, Color.DodgerBlue);
-            spriteBatch.Draw(greenTexture, greenRect, Color.LightGreen);
+            spriteBatch.Draw(_resourceManager.BlueTexture, blueRect, Color.DodgerBlue);
+            spriteBatch.Draw(_resourceManager.GreenTexture, greenRect, Color.LightGreen);
         }
 
         public void DrawSelectedSquare(CustomColor color)
@@ -84,7 +72,7 @@ namespace RgbJourney
                     break;
             }
             string colorMsg = $"You selected {colorName}";
-            spriteBatch.DrawString(font, colorMsg, new Vector2(screenWidth / 2, screenHeight / 10 + cellSize * 4), Color.White);
+            spriteBatch.DrawString(_resourceManager.Font, colorMsg, new Vector2(screenWidth / 2, screenHeight / 10 + cellSize * 4), Color.White);
             //var a = font.MeasureString(colorMsg);
             //var redRect = new Rectangle((int)a.X, (int)a.Y + cellSize * 4, cellSize, cellSize);
 
@@ -95,24 +83,24 @@ namespace RgbJourney
         public void DrawDiceResult(int[] diceRoll, int diceResult)
         {
             string diceMessage = $"You rolled {diceRoll[0]} and {diceRoll[1]}. 1 - sum, 2 - substract.";
-            spriteBatch.DrawString(font, diceMessage, new Vector2(screenWidth / 2, screenHeight / 10 + cellSize * 6), Color.White);
-            spriteBatch.DrawString(font, $"Roll result - {diceResult}", new Vector2(screenWidth / 2, screenHeight / 10 + cellSize * 8), Color.White);
+            spriteBatch.DrawString(_resourceManager.Font, diceMessage, new Vector2(screenWidth / 2, screenHeight / 10 + cellSize * 6), Color.White);
+            spriteBatch.DrawString(_resourceManager.Font, $"Roll result - {diceResult}", new Vector2(screenWidth / 2, screenHeight / 10 + cellSize * 8), Color.White);
         }
 
         public void DrawIllegalTurn()
         {
             string message1 = $"Non legal turn!";
             string message2 = $"You should end turn in selected color!";
-            spriteBatch.DrawString(font, message1, new Vector2(screenWidth / 2, screenHeight / 10 + cellSize * 10), Color.Coral);
-            spriteBatch.DrawString(font, message2, new Vector2(screenWidth / 2, screenHeight / 10 + cellSize * 12), Color.Coral);
+            spriteBatch.DrawString(_resourceManager.Font, message1, new Vector2(screenWidth / 2, screenHeight / 10 + cellSize * 10), Color.Coral);
+            spriteBatch.DrawString(_resourceManager.Font, message2, new Vector2(screenWidth / 2, screenHeight / 10 + cellSize * 12), Color.Coral);
         }
 
         public void DrawWinText()
         {
             string message = "YOU WIN!";
-            spriteBatch.DrawString(font, message, new Vector2(screenWidth / 2, screenHeight / 2), Color.AliceBlue);
-            spriteBatch.DrawString(font, message, new Vector2(screenWidth / 2, screenHeight / 2 + cellSize * 2), Color.AliceBlue);
-            spriteBatch.DrawString(font, message, new Vector2(screenWidth / 2, screenHeight / 2 + cellSize * 4), Color.AliceBlue);
+            spriteBatch.DrawString(_resourceManager.Font, message, new Vector2(screenWidth / 2, screenHeight / 2), Color.AliceBlue);
+            spriteBatch.DrawString(_resourceManager.Font, message, new Vector2(screenWidth / 2, screenHeight / 2 + cellSize * 2), Color.AliceBlue);
+            spriteBatch.DrawString(_resourceManager.Font, message, new Vector2(screenWidth / 2, screenHeight / 2 + cellSize * 4), Color.AliceBlue);
         }
     }
 }

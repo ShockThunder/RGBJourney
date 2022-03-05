@@ -14,19 +14,17 @@ namespace RgbJourney
 
         private int _cellSize;
         private int _cellSpacing;
-        private Texture2D playerTexture;
         private SpriteBatch _spriteBatch;
+        private readonly ResourceManager _resourceManager;
 
-
-        public Player(int stepSize, int borderThickness, int fieldSize, SpriteBatch spriteBatch, GraphicsDevice graphicsDevice)
+        public Player(int stepSize, int borderThickness, int fieldSize, SpriteBatch spriteBatch, ResourceManager resourceManager)
         {
             Position.X = fieldSize / 2 * (stepSize + borderThickness);
             Position.Y = fieldSize / 2 * (stepSize + borderThickness);
             _cellSize = stepSize;
             _cellSpacing = borderThickness;
             _spriteBatch = spriteBatch;
-            playerTexture = new Texture2D(graphicsDevice, 1, 1);
-            playerTexture.SetData(new Color[] { Color.CadetBlue });
+            _resourceManager = resourceManager;
             Position.FieldX = fieldSize / 2 + 1;
             Position.FieldY = fieldSize / 2 + 1;
         }
@@ -34,7 +32,7 @@ namespace RgbJourney
         public void Draw()
         {
             var rec = new Rectangle(Position.X, Position.Y, _cellSize, _cellSize);
-            _spriteBatch.Draw(playerTexture, rec, Color.CadetBlue);
+            _spriteBatch.Draw(_resourceManager.PlayerTexture, rec, Color.CadetBlue);
         }
 
         public void MoveRight()

@@ -16,6 +16,7 @@ namespace RgbJourney
         private int _cellSpacing = 2;
         private Player _player;
         private UIManager _manager;
+        private ResourceManager _resourceManager;
         private CustomColor _selectedColor;
         private GameStep _gameStep;
         private int[] _diceRoll = new int[2] { 0, 0 };
@@ -44,18 +45,18 @@ namespace RgbJourney
         protected override void LoadContent()
         {
             _spriteBatch = new SpriteBatch(GraphicsDevice);
-            _fieldManager = new FieldManager(_cellSize, _cellSpacing, _spriteBatch, GraphicsDevice, _random);
+            _resourceManager = new ResourceManager(GraphicsDevice, Content);
+            _fieldManager = new FieldManager(_cellSize, _cellSpacing, _spriteBatch, _resourceManager, _random);
             _field = _fieldManager.GenerateArray(_fieldSize);
-            _player = new Player(_cellSize, _cellSpacing, _fieldSize, _spriteBatch, GraphicsDevice);
+            _player = new Player(_cellSize, _cellSpacing, _fieldSize, _spriteBatch, _resourceManager);
             _manager = new UIManager(_cellSize, _cellSpacing,
                 GraphicsDevice.Viewport.Width,
-                GraphicsDevice.Viewport.Height, _spriteBatch, GraphicsDevice, Content);
+                GraphicsDevice.Viewport.Height, _spriteBatch, _resourceManager);
             // TODO: use this.Content to load your game content here
         }
 
         protected override void Update(GameTime gameTime)
         {
-
             var keyboardNewState = Keyboard.GetState();
 
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
