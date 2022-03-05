@@ -75,7 +75,7 @@ namespace RgbJourney
         public void DrawField(int[,] field)
         {
             var bigRect = new Rectangle(0, 0, (_cellSize + _cellSpacing) * field.GetLength(0), (_cellSize + _cellSpacing) * field.GetLength(0));
-            _spriteBatch.Draw(_resourceManager.BackTexture, bigRect, Color.Black);
+            _spriteBatch.Draw(_resourceManager.BackTexture, bigRect, Color.White);
 
 
             var defaultRect = new Rectangle(0, 0, _cellSize, _cellSize);
@@ -90,13 +90,13 @@ namespace RgbJourney
                     switch (field[i, j])
                     {
                         case 0:
-                            _spriteBatch.Draw(_resourceManager.RedTexture, rect, Color.LightCoral);
+                            _spriteBatch.Draw(_resourceManager.RedTexture, rect, Color.White);
                             break;
                         case 1:
-                            _spriteBatch.Draw(_resourceManager.BlueTexture, rect, Color.DodgerBlue);
+                            _spriteBatch.Draw(_resourceManager.BlueTexture, rect, Color.White);
                             break;
                         case 2:
-                            _spriteBatch.Draw(_resourceManager.GreenTexture, rect, Color.LightGreen);
+                            _spriteBatch.Draw(_resourceManager.GreenTexture, rect, Color.White);
                             break;
                     }
                 }

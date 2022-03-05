@@ -48,17 +48,14 @@ namespace RgbJourney
             var blueRect = new Rectangle(screenWidth / 2 + cellSize * 2, screenHeight / 10 + cellSize * 2, cellSize, cellSize);
             var greenRect = new Rectangle(screenWidth / 2 + cellSize * 4, screenHeight / 10 + cellSize * 2, cellSize, cellSize);
 
-            spriteBatch.Draw(_resourceManager.RedTexture, redRect, Color.LightCoral);
-
-
-            spriteBatch.Draw(_resourceManager.BlueTexture, blueRect, Color.DodgerBlue);
-            spriteBatch.Draw(_resourceManager.GreenTexture, greenRect, Color.LightGreen);
+            spriteBatch.Draw(_resourceManager.RedTexture, redRect, Color.White);
+            spriteBatch.Draw(_resourceManager.BlueTexture, blueRect, Color.White);
+            spriteBatch.Draw(_resourceManager.GreenTexture, greenRect, Color.White);
         }
 
         public void DrawSelectedSquare(CustomColor color)
         {
             string colorName = string.Empty;
-            Texture2D selectedTexture;
             switch (color)
             {
                 case CustomColor.Red:
@@ -73,11 +70,6 @@ namespace RgbJourney
             }
             string colorMsg = $"You selected {colorName}";
             spriteBatch.DrawString(_resourceManager.Font, colorMsg, new Vector2(screenWidth / 2, screenHeight / 10 + cellSize * 4), Color.White);
-            //var a = font.MeasureString(colorMsg);
-            //var redRect = new Rectangle((int)a.X, (int)a.Y + cellSize * 4, cellSize, cellSize);
-
-            //spriteBatch.Draw(greenTexture, greenRect, Color.Green);
-
         }
 
         public void DrawDiceResult(int[] diceRoll, int diceResult)

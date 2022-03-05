@@ -32,7 +32,7 @@ namespace RgbJourney
         public void Draw()
         {
             var rec = new Rectangle(Position.X, Position.Y, _cellSize, _cellSize);
-            _spriteBatch.Draw(_resourceManager.PlayerTexture, rec, Color.CadetBlue);
+            _spriteBatch.Draw(_resourceManager.PlayerTexture, rec, Color.White);
         }
 
         public void MoveRight()
