@@ -20,6 +20,7 @@ namespace RgbJourney
         private ResourceManager _resourceManager;
         private CustomColor _selectedColor;
         private GameStep _gameStep;
+        private HighlightedCells _highlightedCells = HighlightedCells.Both;
         private int[] _diceRoll = new int[2] { 0, 0 };
         private int _diceResult = 0;
         private bool _isDiceRolled = false;
@@ -53,6 +54,8 @@ namespace RgbJourney
             _manager = new UIManager(_cellSize, _cellSpacing,
                 GraphicsDevice.Viewport.Width,
                 GraphicsDevice.Viewport.Height, _fieldSize, _spriteBatch, _resourceManager);
+
+            _fieldManager.OldPlayerPosition = new Position(_player.Position);
             // TODO: use this.Content to load your game content here
         }
 
@@ -100,6 +103,10 @@ namespace RgbJourney
             {
                 _manager.DrawSelectedSquare(_selectedColor);
                 _manager.DrawDiceResult(_diceRoll, _diceResult);
+
+                _fieldManager.HighlightPossibleCells(
+                    _fieldManager.OldPlayerPosition.FieldX, _fieldManager.OldPlayerPosition.FieldY, _diceRoll, _highlightedCells);
+
             }
             if (_illegalTurn)
                 _manager.DrawIllegalTurn();
@@ -153,6 +160,7 @@ namespace RgbJourney
                 _player.StepsCount = _diceResult;
                 _fieldManager.OldPlayerPosition = new Position(_player.Position);
                 _gameStep = GameStep.Third;
+                _highlightedCells = HighlightedCells.Sum;
             }
             if (keyboardNewState.IsKeyDown(Keys.NumPad2) && !_keyboardOldState.IsKeyDown(Keys.NumPad2)
                 || keyboardNewState.IsKeyDown(Keys.D2) && !_keyboardOldState.IsKeyDown(Keys.D2))
@@ -161,6 +169,7 @@ namespace RgbJourney
                 _player.StepsCount = _diceResult;
                 _fieldManager.OldPlayerPosition = new Position(_player.Position);
                 _gameStep = GameStep.Third;
+                _highlightedCells = HighlightedCells.Sub;
             }
         }
 
@@ -174,7 +183,10 @@ namespace RgbJourney
                     if (_fieldManager.CheckWinCondition(_player.Position))
                         _gameStep = GameStep.Fourth;
                     else
+                    {
+                        _fieldManager.OldPlayerPosition = new Position(_player.Position);
                         _gameStep = GameStep.First;
+                    }
                 }
                 else
                 {

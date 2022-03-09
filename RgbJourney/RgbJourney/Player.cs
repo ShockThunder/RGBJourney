@@ -27,8 +27,8 @@ namespace RgbJourney
             _cellSpacing = borderThickness;
             _spriteBatch = spriteBatch;
             _resourceManager = resourceManager;
-            Position.FieldX = fieldSize / 2 + 1;
-            Position.FieldY = fieldSize / 2 + 1;
+            Position.FieldX = fieldSize / 2;
+            Position.FieldY = fieldSize / 2;
         }
 
         public void Draw()

@@ -15,6 +15,9 @@ namespace RgbJourney
         public Texture2D WhiteTexture { get; set; }
         public Texture2D PlayerTexture { get; set; }
         public Texture2D BackTexture { get; set; }
+        public Texture2D SubHighlightTexture { get; set; }
+        public Texture2D SumHighlightTexture { get; set; }
+
 
         public SpriteFont Font { get; set; }
         public SpriteFont WinFont { get; set; }
@@ -27,16 +30,19 @@ namespace RgbJourney
             _contentManager = content;
 
             RedTexture = _contentManager.Load<Texture2D>("RedTrap");
-
             BlueTexture = _contentManager.Load<Texture2D>("BlueTrap");
-
             GreenTexture = _contentManager.Load<Texture2D>("GreenTrap");
-
             WhiteTexture = _contentManager.Load<Texture2D>("WinCell");
 
             PlayerTexture = _contentManager.Load<Texture2D>("Player");
 
             BackTexture = _contentManager.Load<Texture2D>("BackTexture");
+
+            SubHighlightTexture = new Texture2D(graphicsDevice, 1, 1);
+            SubHighlightTexture.SetData(new Color[] { new Color(Color.CornflowerBlue, 0.1f)});
+
+            SumHighlightTexture = new Texture2D(graphicsDevice, 1, 1);
+            SumHighlightTexture.SetData(new Color[] { new Color(Color.DarkRed, 0.1f) });
 
             Font = _contentManager.Load<SpriteFont>("PixelFont");
             WinFont = _contentManager.Load<SpriteFont>("WinFont");

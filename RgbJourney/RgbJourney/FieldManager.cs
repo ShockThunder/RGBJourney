@@ -156,5 +156,46 @@ namespace RgbJourney
 
         public bool CheckWinCondition(Position playerPosition) =>
             winCells.Any(x => x.Position.X == playerPosition.X && x.Position.Y == playerPosition.Y);
+
+        public void HighlightPossibleCells(int X, int Y, int[] rolledDice, HighlightedCells highlightedCells)
+        {
+            var subDice = Math.Abs(rolledDice[0] - rolledDice[1]);
+            var sumDice = rolledDice[0] + rolledDice[1];
+
+            if(highlightedCells == HighlightedCells.Both)
+            {
+                HighlightCells(X, Y, subDice, _resourceManager.SubHighlightTexture);
+                HighlightCells(X, Y, sumDice, _resourceManager.SumHighlightTexture);
+            }
+            else if(highlightedCells == HighlightedCells.Sub)
+                HighlightCells(X, Y, subDice, _resourceManager.SubHighlightTexture);
+            else if (highlightedCells == HighlightedCells.Sum)
+                HighlightCells(X, Y, sumDice, _resourceManager.SumHighlightTexture);
+
+        }
+
+        public void HighlightCells(int X, int Y, int stepModifier, Texture2D texture)
+        {
+            var defaultRec = new Rectangle(0, 0, _cellSize, _cellSize);
+
+            defaultRec.X = (X + stepModifier) * (_cellSize + _cellSpacing);
+            defaultRec.Y = (Y) * (_cellSize + _cellSpacing);
+            _spriteBatch.Draw(texture, defaultRec, Color.White);
+
+            //Up sub
+            defaultRec.X = (X - stepModifier) * (_cellSize + _cellSpacing);
+            defaultRec.Y = (Y) * (_cellSize + _cellSpacing);
+            _spriteBatch.Draw(texture, defaultRec, Color.White);
+
+            //Right sub
+            defaultRec.X = (X) * (_cellSize + _cellSpacing);
+            defaultRec.Y = (Y + stepModifier) * (_cellSize + _cellSpacing);
+            _spriteBatch.Draw(texture, defaultRec, Color.White);
+
+            //Left sub
+            defaultRec.X = (X) * (_cellSize + _cellSpacing);
+            defaultRec.Y = (Y - stepModifier) * (_cellSize + _cellSpacing);
+            _spriteBatch.Draw(texture, defaultRec, Color.White);
+        }
     }
 }
