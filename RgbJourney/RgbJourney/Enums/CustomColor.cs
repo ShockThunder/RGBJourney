@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace RgbJourney
+namespace RgbJourney.Enums
 {
     public enum CustomColor
     {

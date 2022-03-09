@@ -1,6 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using RgbJourney.Enums;
 using System;
 
 namespace RgbJourney
@@ -134,6 +135,7 @@ namespace RgbJourney
 
             _diceResult = 0;
             _isDiceRolled = false;
+            _player.Direction = MovementDirection.NotSet;
         }
 
         private void HandleSecondStep(KeyboardState keyboardNewState)
@@ -181,31 +183,61 @@ namespace RgbJourney
                     _illegalTurn = true;
                 }
             }
+
             //PlayerMovement
+            // TODO refactor movement. Need to extract common parts
             if (keyboardNewState.IsKeyDown(Keys.Up) && !_keyboardOldState.IsKeyDown(Keys.Up))
             {
-                _illegalTurn = false;
+                if (_illegalTurn)
+                {
+                    _illegalTurn = false;
+                    _player.Direction = MovementDirection.NotSet;
+                }
 
-                _player.MoveUp();
+                if (_player.Direction == MovementDirection.NotSet)
+                    _player.Direction = MovementDirection.Up;
+
+                _player.Move();
             }
             if (keyboardNewState.IsKeyDown(Keys.Down) && !_keyboardOldState.IsKeyDown(Keys.Down))
             {
-                _illegalTurn = false;
+                if (_illegalTurn)
+                {
+                    _illegalTurn = false;
+                    _player.Direction = MovementDirection.NotSet;
+                }
 
-                _player.MoveDown();
+                if (_player.Direction == MovementDirection.NotSet)
+                    _player.Direction = MovementDirection.Down;
+
+                _player.Move();
             }
 
             if (keyboardNewState.IsKeyDown(Keys.Left) && !_keyboardOldState.IsKeyDown(Keys.Left))
             {
-                _illegalTurn = false;
+                if (_illegalTurn)
+                {
+                    _illegalTurn = false;
+                    _player.Direction = MovementDirection.NotSet;
+                }
 
-                _player.MoveLeft();
+                if (_player.Direction == MovementDirection.NotSet)
+                    _player.Direction = MovementDirection.Left;
+
+                _player.Move();
             }
             if (keyboardNewState.IsKeyDown(Keys.Right) && !_keyboardOldState.IsKeyDown(Keys.Right))
             {
-                _illegalTurn = false;
+                if (_illegalTurn)
+                {
+                    _illegalTurn = false;
+                    _player.Direction = MovementDirection.NotSet;
+                }
 
-                _player.MoveRight();
+                if (_player.Direction == MovementDirection.NotSet)
+                    _player.Direction = MovementDirection.Right;
+
+                _player.Move();
             }
 
             //Calcualte right cell

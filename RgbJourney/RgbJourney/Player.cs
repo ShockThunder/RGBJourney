@@ -1,5 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using RgbJourney.Enums;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -11,6 +12,7 @@ namespace RgbJourney
         public Position Position { get; set; } = new Position();
 
         public int StepsCount = 0;
+        public MovementDirection Direction = MovementDirection.NotSet;
 
         private int _cellSize;
         private int _cellSpacing;
@@ -33,6 +35,27 @@ namespace RgbJourney
         {
             var rec = new Rectangle(Position.X, Position.Y, _cellSize, _cellSize);
             _spriteBatch.Draw(_resourceManager.PlayerTexture, rec, Color.White);
+        }
+
+        public void Move()
+        {
+            switch (Direction)
+            {
+                case MovementDirection.Up:
+                    MoveUp();
+                    break;
+                case MovementDirection.Down:
+                    MoveDown();
+                    break;
+                case MovementDirection.Left:
+                    MoveLeft();
+                    break;
+                case MovementDirection.Right:
+                    MoveRight();
+                    break;
+                default:
+                    break;
+            }
         }
 
         public void MoveRight()
