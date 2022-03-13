@@ -92,8 +92,9 @@ namespace RgbJourney
             spriteBatch.DrawString(_resourceManager.WinFont, message, new Vector2(screenWidth / 3 + 5, screenHeight / 3 + 5), Color.White, 0.0f, new Vector2(0 ,0), 1f, SpriteEffects.None, 0);
         }
 
-        public void DrawTimer(double time)
+        public void DrawTimer(double gameStartSeconds, double currentSeconds)
         {
+            var time = currentSeconds - gameStartSeconds;
             var stringTime = time.ToString("F2");
             var medal = new Rectangle(screenWidth - cellSize * 7, screenHeight - cellSize * 2, cellSize, cellSize);
             var texture = _resourceManager.GoldMedal;
@@ -106,8 +107,18 @@ namespace RgbJourney
                 texture = _resourceManager.BronzeMedal;
 
             spriteBatch.Draw(texture, medal, Color.White);
+        }
 
+        public void DrawTitleScreen()
+        {
+            string message = "Press any key to start game";
 
+            var size = _resourceManager.Font.MeasureString(message);
+
+            var rec = new Rectangle(screenWidth / 3, screenHeight / 3, (int)size.X, (int)size.Y);
+
+            spriteBatch.Draw(_resourceManager.SilverMedal, rec, Color.White);
+            spriteBatch.DrawString(_resourceManager.Font, message, new Vector2(screenWidth / 3, screenHeight / 3), Color.Black, 0.0f, new Vector2(0, 0), 1f, SpriteEffects.None, 0);
         }
     }
 }

@@ -178,24 +178,24 @@ namespace RgbJourney
         {
             var defaultRec = new Rectangle(0, 0, _cellSize, _cellSize);
 
-            defaultRec.X = (X + stepModifier) * (_cellSize + _cellSpacing);
-            defaultRec.Y = (Y) * (_cellSize + _cellSpacing);
-            _spriteBatch.Draw(texture, defaultRec, Color.White);
+            //Down
+            HighlighCell(X + stepModifier, Y, defaultRec, texture);
+            //Up
+            HighlighCell(X - stepModifier, Y, defaultRec, texture);
+            //Right
+            HighlighCell(X, Y + stepModifier, defaultRec, texture);
+            //Left
+            HighlighCell(X, Y - stepModifier, defaultRec, texture);
+        }
 
-            //Up sub
-            defaultRec.X = (X - stepModifier) * (_cellSize + _cellSpacing);
-            defaultRec.Y = (Y) * (_cellSize + _cellSpacing);
-            _spriteBatch.Draw(texture, defaultRec, Color.White);
-
-            //Right sub
-            defaultRec.X = (X) * (_cellSize + _cellSpacing);
-            defaultRec.Y = (Y + stepModifier) * (_cellSize + _cellSpacing);
-            _spriteBatch.Draw(texture, defaultRec, Color.White);
-
-            //Left sub
-            defaultRec.X = (X) * (_cellSize + _cellSpacing);
-            defaultRec.Y = (Y - stepModifier) * (_cellSize + _cellSpacing);
-            _spriteBatch.Draw(texture, defaultRec, Color.White);
+        private void HighlighCell(int X, int Y, Rectangle rec, Texture2D texture)
+        {
+            if(X < 15 && Y < 15)
+            {
+                rec.X = X * (_cellSize + _cellSpacing);
+                rec.Y = Y * (_cellSize + _cellSpacing);
+                _spriteBatch.Draw(texture, rec, Color.White);
+            }
         }
     }
 }

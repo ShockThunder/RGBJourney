@@ -16,16 +16,19 @@ namespace RgbJourney
         private int _cellSize = 29;
         private int _cellSpacing = 2;
         private Player _player;
-        private UIManager _manager;
+        private UIManager _uiManager;
         private ResourceManager _resourceManager;
         private CustomColor _selectedColor;
         private GameStep _gameStep;
+        private GamePhase _gamePhase;
         private HighlightedCells _highlightedCells = HighlightedCells.Both;
         private int[] _diceRoll = new int[2] { 0, 0 };
         private int _diceResult = 0;
         private bool _isDiceRolled = false;
         private bool _illegalTurn = false;
         private Random _random = new Random();
+
+        private double _gameStartSeconds = 0;
 
         private KeyboardState _keyboardOldState = Keyboard.GetState();
 
@@ -39,6 +42,7 @@ namespace RgbJourney
         protected override void Initialize()
         {
             // TODO: Add your initialization logic here
+            _gamePhase = GamePhase.TitleScreen;
 
             _gameStep = GameStep.First;
             base.Initialize();
@@ -51,7 +55,7 @@ namespace RgbJourney
             _fieldManager = new FieldManager(_cellSize, _cellSpacing, _spriteBatch, _resourceManager, _random);
             _field = _fieldManager.GenerateArray(_fieldSize);
             _player = new Player(_cellSize, _cellSpacing, _fieldSize, _spriteBatch, _resourceManager);
-            _manager = new UIManager(_cellSize, _cellSpacing,
+            _uiManager = new UIManager(_cellSize, _cellSpacing,
                 GraphicsDevice.Viewport.Width,
                 GraphicsDevice.Viewport.Height, _fieldSize, _spriteBatch, _resourceManager);
 
@@ -66,6 +70,36 @@ namespace RgbJourney
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
 
+            switch (_gamePhase)
+            {
+                case GamePhase.TitleScreen:
+                    HandleTitleScreen(keyboardNewState, gameTime);
+                    break;
+                case GamePhase.WinScreen:
+                    break;
+                case GamePhase.LoseScreen:
+                    break;
+                case GamePhase.Game:
+                    HandleGame(keyboardNewState);
+                    break;
+            }
+
+            _keyboardOldState = keyboardNewState;
+
+            base.Update(gameTime);
+        }
+
+        private void HandleTitleScreen(KeyboardState keyboardNewState, GameTime gameTime)
+        {
+            if (keyboardNewState.GetPressedKeyCount() > 0)
+            {
+                _gamePhase = GamePhase.Game;
+                _gameStartSeconds = gameTime.TotalGameTime.Seconds;
+            }
+        }
+
+        private void HandleGame(KeyboardState keyboardNewState)
+        {
             switch (_gameStep)
             {
                 case GameStep.First:
@@ -82,43 +116,77 @@ namespace RgbJourney
                 default:
                     break;
             }
-
-            _keyboardOldState = keyboardNewState;
-
-            base.Update(gameTime);
         }
 
         protected override void Draw(GameTime gameTime)
         {
-            GraphicsDevice.Clear(Color.Brown);
+            GraphicsDevice.Clear(Color.CornflowerBlue);
 
             _spriteBatch.Begin();
             // TODO: Add your drawing code here
 
+            switch (_gamePhase)
+            {
+                case GamePhase.TitleScreen:
+                    DrawTitleScreen();
+                    break;
+                case GamePhase.Game:
+                    DrawGameScreen(gameTime);
+                    break;
+                case GamePhase.WinScreen:
+                    DrawWinScreen();
+                    break;
+                case GamePhase.LoseScreen:
+                    DrawLoseScreen();
+                    break;
+                default:
+                    break;
+            }
 
+            
+            _spriteBatch.End();
+
+
+            base.Draw(gameTime);
+        }
+
+        private void DrawLoseScreen()
+        {
+            throw new NotImplementedException();
+        }
+
+        private void DrawWinScreen()
+        {
+            throw new NotImplementedException();
+        }
+
+        private void DrawGameScreen(GameTime gameTime)
+        {
             _fieldManager.DrawField(_field);
             _player.Draw();
-            _manager.Draw();
+            _uiManager.Draw();
             if (_gameStep != GameStep.First)
             {
-                _manager.DrawSelectedSquare(_selectedColor);
-                _manager.DrawDiceResult(_diceRoll, _diceResult);
+                _uiManager.DrawSelectedSquare(_selectedColor);
+                _uiManager.DrawDiceResult(_diceRoll, _diceResult);
 
                 _fieldManager.HighlightPossibleCells(
                     _fieldManager.OldPlayerPosition.FieldX, _fieldManager.OldPlayerPosition.FieldY, _diceRoll, _highlightedCells);
 
             }
             if (_illegalTurn)
-                _manager.DrawIllegalTurn();
+                _uiManager.DrawIllegalTurn();
             if (_gameStep == GameStep.Fourth)
-                _manager.DrawWinText();
+                _uiManager.DrawWinText();
 
 
-            _manager.DrawTimer(gameTime.TotalGameTime.TotalSeconds);
-            _spriteBatch.End();
+            _uiManager.DrawTimer(_gameStartSeconds, gameTime.TotalGameTime.TotalSeconds);
+        }
 
-
-            base.Draw(gameTime);
+        private void DrawTitleScreen()
+        {
+            _fieldManager.DrawField(_field);
+            _uiManager.DrawTitleScreen();
         }
 
         private void HandleFirstStep(KeyboardState keyboardNewState)
