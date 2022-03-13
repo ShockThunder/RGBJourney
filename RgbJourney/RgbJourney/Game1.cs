@@ -13,6 +13,7 @@ namespace RgbJourney
         private FieldManager _fieldManager;
         private int[,] _field;
         private int _fieldSize = 15;
+        private int _maxRoll = 6;
         private int _cellSize = 29;
         private int _cellSpacing = 2;
         private Player _player;
@@ -53,8 +54,8 @@ namespace RgbJourney
         {
             _spriteBatch = new SpriteBatch(GraphicsDevice);
             _resourceManager = new ResourceManager(GraphicsDevice, Content);
-            _fieldManager = new FieldManager(_cellSize, _cellSpacing, _spriteBatch, _resourceManager, _random);
-            _field = _fieldManager.GenerateArray(_fieldSize);
+            _fieldManager = new FieldManager(_cellSize, _cellSpacing, _spriteBatch, _resourceManager, _random, _fieldSize);
+            _field = _fieldManager.GenerateArray();
             _player = new Player(_cellSize, _cellSpacing, _fieldSize, _spriteBatch, _resourceManager);
             _uiManager = new UIManager(_cellSize, _cellSpacing,
                 GraphicsDevice.Viewport.Width,
@@ -71,18 +72,19 @@ namespace RgbJourney
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
 
-            if (gameTime.TotalGameTime.Seconds - _gameStartSeconds >= _fullGameTimeInSeconds)
+            if (gameTime.TotalGameTime.TotalSeconds - _gameStartSeconds >= _fullGameTimeInSeconds)
                 _gamePhase = GamePhase.LoseScreen;
 
             switch (_gamePhase)
             {
                 case GamePhase.TitleScreen:
-                    HandleTitleScreen(keyboardNewState, gameTime);
+                    HandleNoGameScreen(keyboardNewState, gameTime);
                     break;
                 case GamePhase.WinScreen:
+                    HandleNoGameScreen(keyboardNewState, gameTime);
                     break;
                 case GamePhase.LoseScreen:
-                    HandleLoseScreen(keyboardNewState);
+                    HandleNoGameScreen(keyboardNewState, gameTime);
                     break;
                 case GamePhase.Game:
                     HandleGame(keyboardNewState);
@@ -94,20 +96,32 @@ namespace RgbJourney
             base.Update(gameTime);
         }
 
-        private void HandleLoseScreen(KeyboardState keyboardNewState)
+        private void HandleNoGameScreen(KeyboardState keyboardNewState, GameTime gameTime)
         {
-            if (keyboardNewState.GetPressedKeyCount() > 0)
+            if (keyboardNewState.IsKeyDown(Keys.NumPad1) && !_keyboardOldState.IsKeyDown(Keys.NumPad1)
+                || keyboardNewState.IsKeyDown(Keys.D1) && !_keyboardOldState.IsKeyDown(Keys.D1))
             {
+                _fieldSize = 15;
+                _maxRoll = 3;
+                LoadContent();
                 _gamePhase = GamePhase.Game;
+                _gameStep = GameStep.First;
+                _gameStartSeconds = gameTime.TotalGameTime.TotalSeconds;
             }
-        }
-
-        private void HandleTitleScreen(KeyboardState keyboardNewState, GameTime gameTime)
-        {
-            if (keyboardNewState.GetPressedKeyCount() > 0)
+            if (keyboardNewState.IsKeyDown(Keys.NumPad2) && !_keyboardOldState.IsKeyDown(Keys.NumPad2)
+                || keyboardNewState.IsKeyDown(Keys.D2) && !_keyboardOldState.IsKeyDown(Keys.D2))
             {
+                _fieldSize = 9;
+                _maxRoll = 3;
+                LoadContent();
                 _gamePhase = GamePhase.Game;
-                _gameStartSeconds = gameTime.TotalGameTime.Seconds;
+                _gameStep = GameStep.First;
+                _gameStartSeconds = gameTime.TotalGameTime.TotalSeconds;
+            }
+
+            if (keyboardNewState.GetPressedKeyCount() > 0 && _keyboardOldState.GetPressedKeyCount() == 0)
+            {
+
             }
         }
 
@@ -171,6 +185,7 @@ namespace RgbJourney
 
         private void DrawWinScreen()
         {
+            DrawTitleScreen();
             _uiManager.DrawWinText();
         }
 
@@ -257,83 +272,83 @@ namespace RgbJourney
 
         private void HandleThirdStep(KeyboardState keyboardNewState)
         {
-            if (_player.StepsCount < 1)
+            if (_fieldManager.CheckWinCondition(_player.Position))
+                _gamePhase = GamePhase.WinScreen;
+            else
             {
-                var canEndTurn = _fieldManager.CanEndTurn(_player.Position, _selectedColor);
-                if (canEndTurn)
+                if (_player.StepsCount < 1)
                 {
-                    if (_fieldManager.CheckWinCondition(_player.Position))
-                        _gamePhase = GamePhase.WinScreen;
-                    else
+                    var canEndTurn = _fieldManager.CanEndTurn(_player.Position, _selectedColor);
+                    if (canEndTurn)
                     {
                         _fieldManager.OldPlayerPosition = new Position(_player.Position);
                         _gameStep = GameStep.First;
                     }
+                    else
+                    {
+                        _player.Position = new Position(_fieldManager.OldPlayerPosition);
+                        _player.StepsCount = _diceResult;
+                        _illegalTurn = true;
+                    }
                 }
-                else
+
+
+                //PlayerMovement
+                // TODO refactor movement. Need to extract common parts
+                if (keyboardNewState.IsKeyDown(Keys.Up) && !_keyboardOldState.IsKeyDown(Keys.Up))
                 {
-                    _player.Position = new Position(_fieldManager.OldPlayerPosition);
-                    _player.StepsCount = _diceResult;
-                    _illegalTurn = true;
+                    if (_illegalTurn)
+                    {
+                        _illegalTurn = false;
+                        _player.Direction = MovementDirection.NotSet;
+                    }
+
+                    if (_player.Direction == MovementDirection.NotSet)
+                        _player.Direction = MovementDirection.Up;
+
+                    _player.Move();
+                }
+                if (keyboardNewState.IsKeyDown(Keys.Down) && !_keyboardOldState.IsKeyDown(Keys.Down))
+                {
+                    if (_illegalTurn)
+                    {
+                        _illegalTurn = false;
+                        _player.Direction = MovementDirection.NotSet;
+                    }
+
+                    if (_player.Direction == MovementDirection.NotSet)
+                        _player.Direction = MovementDirection.Down;
+
+                    _player.Move();
+                }
+
+                if (keyboardNewState.IsKeyDown(Keys.Left) && !_keyboardOldState.IsKeyDown(Keys.Left))
+                {
+                    if (_illegalTurn)
+                    {
+                        _illegalTurn = false;
+                        _player.Direction = MovementDirection.NotSet;
+                    }
+
+                    if (_player.Direction == MovementDirection.NotSet)
+                        _player.Direction = MovementDirection.Left;
+
+                    _player.Move();
+                }
+                if (keyboardNewState.IsKeyDown(Keys.Right) && !_keyboardOldState.IsKeyDown(Keys.Right))
+                {
+                    if (_illegalTurn)
+                    {
+                        _illegalTurn = false;
+                        _player.Direction = MovementDirection.NotSet;
+                    }
+
+                    if (_player.Direction == MovementDirection.NotSet)
+                        _player.Direction = MovementDirection.Right;
+
+                    _player.Move();
                 }
             }
-
-            //PlayerMovement
-            // TODO refactor movement. Need to extract common parts
-            if (keyboardNewState.IsKeyDown(Keys.Up) && !_keyboardOldState.IsKeyDown(Keys.Up))
-            {
-                if (_illegalTurn)
-                {
-                    _illegalTurn = false;
-                    _player.Direction = MovementDirection.NotSet;
-                }
-
-                if (_player.Direction == MovementDirection.NotSet)
-                    _player.Direction = MovementDirection.Up;
-
-                _player.Move();
-            }
-            if (keyboardNewState.IsKeyDown(Keys.Down) && !_keyboardOldState.IsKeyDown(Keys.Down))
-            {
-                if (_illegalTurn)
-                {
-                    _illegalTurn = false;
-                    _player.Direction = MovementDirection.NotSet;
-                }
-
-                if (_player.Direction == MovementDirection.NotSet)
-                    _player.Direction = MovementDirection.Down;
-
-                _player.Move();
-            }
-
-            if (keyboardNewState.IsKeyDown(Keys.Left) && !_keyboardOldState.IsKeyDown(Keys.Left))
-            {
-                if (_illegalTurn)
-                {
-                    _illegalTurn = false;
-                    _player.Direction = MovementDirection.NotSet;
-                }
-
-                if (_player.Direction == MovementDirection.NotSet)
-                    _player.Direction = MovementDirection.Left;
-
-                _player.Move();
-            }
-            if (keyboardNewState.IsKeyDown(Keys.Right) && !_keyboardOldState.IsKeyDown(Keys.Right))
-            {
-                if (_illegalTurn)
-                {
-                    _illegalTurn = false;
-                    _player.Direction = MovementDirection.NotSet;
-                }
-
-                if (_player.Direction == MovementDirection.NotSet)
-                    _player.Direction = MovementDirection.Right;
-
-                _player.Move();
-            }
-
             //Calcualte right cell
 
         }
@@ -341,8 +356,8 @@ namespace RgbJourney
         private int[] RollDice()
         {
             var diceRoll = new int[2];
-            diceRoll[0] = _random.Next(1, 7);
-            diceRoll[1] = _random.Next(1, 7);
+            diceRoll[0] = _random.Next(1, _maxRoll + 1);
+            diceRoll[1] = _random.Next(1, _maxRoll + 1);
 
             return diceRoll;
         }

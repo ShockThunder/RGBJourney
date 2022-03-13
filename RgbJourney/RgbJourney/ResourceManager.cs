@@ -42,10 +42,10 @@ namespace RgbJourney
             BackTexture = _contentManager.Load<Texture2D>("BackTexture");
 
             SubHighlightTexture = new Texture2D(graphicsDevice, 1, 1);
-            SubHighlightTexture.SetData(new Color[] { new Color(Color.CornflowerBlue, 0.1f)});
+            SubHighlightTexture.SetData(new Color[] { new Color(Color.CornflowerBlue, 1f)});
 
             SumHighlightTexture = new Texture2D(graphicsDevice, 1, 1);
-            SumHighlightTexture.SetData(new Color[] { new Color(Color.DarkRed, 0.1f) });
+            SumHighlightTexture.SetData(new Color[] { new Color(Color.DarkRed, 1f) });
 
             GoldMedal = new Texture2D(graphicsDevice, 1, 1);
             GoldMedal.SetData(new Color[] { new Color(Color.Gold, 1f) });

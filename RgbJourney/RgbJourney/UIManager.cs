@@ -111,22 +111,21 @@ namespace RgbJourney
 
         public void DrawTitleScreen()
         {
-            string message = "Press any key to start game";
+            string message = "Press 1 for big field or 2 for small field";
 
             var size = _resourceManager.Font.MeasureString(message);
 
-            var rec = new Rectangle(screenWidth / 3, screenHeight / 3 + cellSize * 4, (int)size.X, (int)size.Y);
+            var rec = new Rectangle(screenWidth / 5, screenHeight / 3 + cellSize * 4, (int)size.X, (int)size.Y);
 
             spriteBatch.Draw(_resourceManager.SilverMedal, rec, Color.White);
-            spriteBatch.DrawString(_resourceManager.Font, message, new Vector2(screenWidth / 3, screenHeight / 3 + cellSize * 4), Color.Black, 0.0f, new Vector2(0, 0), 1f, SpriteEffects.None, 0);
+            spriteBatch.DrawString(_resourceManager.Font, message, new Vector2(screenWidth / 5, screenHeight / 3 + cellSize * 4), Color.Black, 0.0f, new Vector2(0, 0), 1f, SpriteEffects.None, 0);
         }
 
-        internal void DrawLoseText()
+        public void DrawLoseText()
         {
             string message = "YOU LOSE!";
             spriteBatch.DrawString(_resourceManager.WinFont, message, new Vector2(screenWidth / 3, screenHeight / 3), Color.Black, 0.0f, new Vector2(0, 0), 1f, SpriteEffects.None, 0);
             spriteBatch.DrawString(_resourceManager.WinFont, message, new Vector2(screenWidth / 3 + 5, screenHeight / 3 + 5), Color.White, 0.0f, new Vector2(0, 0), 1f, SpriteEffects.None, 0);
-
         }
     }
 }

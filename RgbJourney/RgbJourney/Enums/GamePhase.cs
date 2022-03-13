@@ -9,6 +9,7 @@ namespace RgbJourney.Enums
         TitleScreen,
         Game,
         WinScreen,
-        LoseScreen
+        LoseScreen,
+        SelectMode
     }
 }

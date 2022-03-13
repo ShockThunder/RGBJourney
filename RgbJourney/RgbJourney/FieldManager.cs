@@ -11,6 +11,7 @@ namespace RgbJourney
     {
         private int _cellSize;
         private int _cellSpacing;
+        private int _fieldSize;
         private readonly SpriteBatch _spriteBatch;
         private readonly ResourceManager _resourceManager;
         private Random _random;
@@ -21,22 +22,23 @@ namespace RgbJourney
 
 
         public FieldManager(int cellSize, int cellSpacing,
-            SpriteBatch spriteBatch, ResourceManager resourceManager, Random random)
+            SpriteBatch spriteBatch, ResourceManager resourceManager, Random random, int fieldSize)
         {
             _cellSize = cellSize;
             _cellSpacing = cellSpacing;
             _spriteBatch = spriteBatch;
             _resourceManager = resourceManager;
             _random = random;
+            _fieldSize = fieldSize;
         }
 
-        public int[,] GenerateArray(int arraySize)
+        public int[,] GenerateArray()
         {
-            var array = new int[arraySize, arraySize];
+            var array = new int[_fieldSize, _fieldSize];
 
-            for (int i = 0; i < arraySize; i++)
+            for (int i = 0; i < _fieldSize; i++)
             {
-                for (int j = 0; j < arraySize; j++)
+                for (int j = 0; j < _fieldSize; j++)
                 {
                     var randomNumber = _random.Next(0, 3);
                     array[i, j] = randomNumber;
@@ -56,9 +58,9 @@ namespace RgbJourney
                             break;
                     }
                     if (i == 0 && j == 0
-                        || i == 0 && j == arraySize - 1
-                        || i == arraySize - 1 && j == 0
-                        || i == arraySize - 1 && j == arraySize - 1)
+                        || i == 0 && j == _fieldSize - 1
+                        || i == _fieldSize - 1 && j == 0
+                        || i == _fieldSize - 1 && j == _fieldSize - 1)
                         cell.Color = CustomColor.White;
 
                     cells.Add(cell);
@@ -66,9 +68,9 @@ namespace RgbJourney
             }
 
             winCells.Add(BuildCell(0, 0, CustomColor.White));
-            winCells.Add(BuildCell(0, arraySize - 1, CustomColor.White));
-            winCells.Add(BuildCell(arraySize - 1, 0, CustomColor.White));
-            winCells.Add(BuildCell(arraySize - 1, arraySize - 1, CustomColor.White));
+            winCells.Add(BuildCell(0, _fieldSize - 1, CustomColor.White));
+            winCells.Add(BuildCell(_fieldSize - 1, 0, CustomColor.White));
+            winCells.Add(BuildCell(_fieldSize - 1, _fieldSize - 1, CustomColor.White));
 
             return array;
         }
@@ -176,7 +178,7 @@ namespace RgbJourney
 
         public void HighlightCells(int X, int Y, int stepModifier, Texture2D texture)
         {
-            var defaultRec = new Rectangle(0, 0, _cellSize, _cellSize);
+            var defaultRec = new Rectangle(0, 0, _cellSize / 2, _cellSize / 2);
 
             //Down
             HighlighCell(X + stepModifier, Y, defaultRec, texture);
@@ -190,10 +192,10 @@ namespace RgbJourney
 
         private void HighlighCell(int X, int Y, Rectangle rec, Texture2D texture)
         {
-            if(X < 15 && Y < 15)
+            if(X < _fieldSize && Y < _fieldSize)
             {
-                rec.X = X * (_cellSize + _cellSpacing);
-                rec.Y = Y * (_cellSize + _cellSpacing);
+                rec.X = X * (_cellSize + _cellSpacing) + _cellSize / 4;
+                rec.Y = Y * (_cellSize + _cellSpacing) + _cellSize / 4;
                 _spriteBatch.Draw(texture, rec, Color.White);
             }
         }
