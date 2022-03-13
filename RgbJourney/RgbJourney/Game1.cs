@@ -113,6 +113,8 @@ namespace RgbJourney
             if (_gameStep == GameStep.Fourth)
                 _manager.DrawWinText();
 
+
+            _manager.DrawTimer(gameTime.TotalGameTime.TotalSeconds);
             _spriteBatch.End();
 
 
@@ -143,6 +145,7 @@ namespace RgbJourney
             _diceResult = 0;
             _isDiceRolled = false;
             _player.Direction = MovementDirection.NotSet;
+            _highlightedCells = HighlightedCells.Both;
         }
 
         private void HandleSecondStep(KeyboardState keyboardNewState)

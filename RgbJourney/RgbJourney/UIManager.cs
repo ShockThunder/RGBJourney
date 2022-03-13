@@ -91,5 +91,23 @@ namespace RgbJourney
             spriteBatch.DrawString(_resourceManager.WinFont, message, new Vector2(screenWidth / 3, screenHeight / 3), Color.Black, 0.0f, new Vector2(0 ,0), 1f, SpriteEffects.None, 0);
             spriteBatch.DrawString(_resourceManager.WinFont, message, new Vector2(screenWidth / 3 + 5, screenHeight / 3 + 5), Color.White, 0.0f, new Vector2(0 ,0), 1f, SpriteEffects.None, 0);
         }
+
+        public void DrawTimer(double time)
+        {
+            var stringTime = time.ToString("F2");
+            var medal = new Rectangle(screenWidth - cellSize * 7, screenHeight - cellSize * 2, cellSize, cellSize);
+            var texture = _resourceManager.GoldMedal;
+
+            spriteBatch.DrawString(_resourceManager.Font, stringTime, new Vector2(screenWidth - cellSize * 5, screenHeight - cellSize * 2), Color.Black, 0.0f, new Vector2(0, 0), 1f, SpriteEffects.None, 0);
+            
+            if(time > 15 && time < 30)
+                texture = _resourceManager.SilverMedal;
+            if (time > 30)
+                texture = _resourceManager.BronzeMedal;
+
+            spriteBatch.Draw(texture, medal, Color.White);
+
+
+        }
     }
 }
