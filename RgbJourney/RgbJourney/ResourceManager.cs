@@ -32,9 +32,9 @@ namespace RgbJourney
         {
             _contentManager = content;
 
-            RedTexture = _contentManager.Load<Texture2D>("RedTrap");
-            BlueTexture = _contentManager.Load<Texture2D>("BlueTrap");
-            GreenTexture = _contentManager.Load<Texture2D>("GreenTrap");
+            RedTexture = _contentManager.Load<Texture2D>("Red2");
+            BlueTexture = _contentManager.Load<Texture2D>("Blue2");
+            GreenTexture = _contentManager.Load<Texture2D>("Green2");
             WhiteTexture = _contentManager.Load<Texture2D>("WinCell");
 
             PlayerTexture = _contentManager.Load<Texture2D>("Player");
