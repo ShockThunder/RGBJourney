@@ -29,6 +29,7 @@ namespace RgbJourney
         private Random _random = new Random();
 
         private double _gameStartSeconds = 0;
+        private double _fullGameTimeInSeconds = 45;
 
         private KeyboardState _keyboardOldState = Keyboard.GetState();
 
@@ -70,6 +71,9 @@ namespace RgbJourney
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
 
+            if (gameTime.TotalGameTime.Seconds - _gameStartSeconds >= _fullGameTimeInSeconds)
+                _gamePhase = GamePhase.LoseScreen;
+
             switch (_gamePhase)
             {
                 case GamePhase.TitleScreen:
@@ -78,6 +82,7 @@ namespace RgbJourney
                 case GamePhase.WinScreen:
                     break;
                 case GamePhase.LoseScreen:
+                    HandleLoseScreen(keyboardNewState);
                     break;
                 case GamePhase.Game:
                     HandleGame(keyboardNewState);
@@ -87,6 +92,14 @@ namespace RgbJourney
             _keyboardOldState = keyboardNewState;
 
             base.Update(gameTime);
+        }
+
+        private void HandleLoseScreen(KeyboardState keyboardNewState)
+        {
+            if (keyboardNewState.GetPressedKeyCount() > 0)
+            {
+                _gamePhase = GamePhase.Game;
+            }
         }
 
         private void HandleTitleScreen(KeyboardState keyboardNewState, GameTime gameTime)
@@ -143,7 +156,7 @@ namespace RgbJourney
                     break;
             }
 
-            
+
             _spriteBatch.End();
 
 
@@ -152,12 +165,13 @@ namespace RgbJourney
 
         private void DrawLoseScreen()
         {
-            throw new NotImplementedException();
+            DrawTitleScreen();
+            _uiManager.DrawLoseText();
         }
 
         private void DrawWinScreen()
         {
-            throw new NotImplementedException();
+            _uiManager.DrawWinText();
         }
 
         private void DrawGameScreen(GameTime gameTime)
@@ -176,9 +190,6 @@ namespace RgbJourney
             }
             if (_illegalTurn)
                 _uiManager.DrawIllegalTurn();
-            if (_gameStep == GameStep.Fourth)
-                _uiManager.DrawWinText();
-
 
             _uiManager.DrawTimer(_gameStartSeconds, gameTime.TotalGameTime.TotalSeconds);
         }
@@ -252,7 +263,7 @@ namespace RgbJourney
                 if (canEndTurn)
                 {
                     if (_fieldManager.CheckWinCondition(_player.Position))
-                        _gameStep = GameStep.Fourth;
+                        _gamePhase = GamePhase.WinScreen;
                     else
                     {
                         _fieldManager.OldPlayerPosition = new Position(_player.Position);
