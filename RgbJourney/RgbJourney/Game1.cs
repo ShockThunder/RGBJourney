@@ -13,6 +13,8 @@ namespace RgbJourney
         private FieldGenerator _fieldGenerator;
         private Random _random = new Random();
         private Field _field;
+        private GameStepManager _gameStepManager;
+        private int PLAYERSTEP = 4;
 
         // Old code
         private GraphicsDeviceManager _graphics;
@@ -29,9 +31,7 @@ namespace RgbJourney
         private GameStep _gameStep;
         private GamePhase _gamePhase;
         private HighlightedCells _highlightedCells = HighlightedCells.Both;
-        private int[] _diceRoll = new int[2] { 0, 0 };
-        private int _diceResult = 0;
-        private bool _isDiceRolled = false;
+        
         private bool _illegalTurn = false;
 
         private double _gameStartSeconds = 0;
@@ -64,6 +64,7 @@ namespace RgbJourney
             //Alpha-2 refactor
             _fieldGenerator = new FieldGenerator(_cellSize, _cellSpacing, _fieldSize, _random);
             _field = _fieldGenerator.GenerateField();
+            _gameStepManager = new GameStepManager(_random);
             //----
 
             _player = new Player(_cellSize, _cellSpacing, _fieldSize, _spriteBatch, _resourceManager);
@@ -140,7 +141,7 @@ namespace RgbJourney
             switch (_gameStep)
             {
                 case GameStep.First:
-                    HandleFirstStep(keyboardNewState);
+                    HandleFirstStep();
                     break;
                 case GameStep.Second:
                     HandleSecondStep(keyboardNewState);
@@ -207,10 +208,9 @@ namespace RgbJourney
             if (_gameStep != GameStep.First)
             {
                 _uiManager.DrawSelectedSquare(_selectedColor);
-                _uiManager.DrawDiceResult(_diceRoll, _diceResult);
 
                 _fieldManager.HighlightPossibleCells(
-                    _fieldManager.OldPlayerPosition.FieldX, _fieldManager.OldPlayerPosition.FieldY, _diceRoll, _highlightedCells);
+                    _fieldManager.OldPlayerPosition.FieldX, _fieldManager.OldPlayerPosition.FieldY, PLAYERSTEP, _highlightedCells);
 
             }
             if (_illegalTurn)
@@ -225,46 +225,25 @@ namespace RgbJourney
             _uiManager.DrawTitleScreen();
         }
 
-        private void HandleFirstStep(KeyboardState keyboardNewState)
+        private void HandleFirstStep()
         {
-            if (keyboardNewState.IsKeyDown(Keys.NumPad1) && !_keyboardOldState.IsKeyDown(Keys.NumPad1)
-                || keyboardNewState.IsKeyDown(Keys.D1) && !_keyboardOldState.IsKeyDown(Keys.D1))
-            {
-                _selectedColor = CustomColor.Red;
-                _gameStep = GameStep.Second;
-            }
-            if (keyboardNewState.IsKeyDown(Keys.NumPad2) && !_keyboardOldState.IsKeyDown(Keys.NumPad2)
-                || keyboardNewState.IsKeyDown(Keys.D2) && !_keyboardOldState.IsKeyDown(Keys.D2))
-            {
-                _selectedColor = CustomColor.Blue;
-                _gameStep = GameStep.Second;
-            }
-            if (keyboardNewState.IsKeyDown(Keys.NumPad3) && !_keyboardOldState.IsKeyDown(Keys.NumPad3)
-                || keyboardNewState.IsKeyDown(Keys.D3) && !_keyboardOldState.IsKeyDown(Keys.D3))
-            {
-                _selectedColor = CustomColor.Green;
-                _gameStep = GameStep.Second;
-            }
+            _selectedColor = _gameStepManager.GenerateTargetColor();
+            _gameStep = GameStep.Second;
 
-            _diceResult = 0;
-            _isDiceRolled = false;
+            
             _player.Direction = MovementDirection.NotSet;
             _highlightedCells = HighlightedCells.Both;
         }
 
         private void HandleSecondStep(KeyboardState keyboardNewState)
         {
-            if (!_isDiceRolled)
-            {
-                _diceRoll = RollDice();
-                _isDiceRolled = true;
-            }
+            
             //RollDice            
             if (keyboardNewState.IsKeyDown(Keys.NumPad1) && !_keyboardOldState.IsKeyDown(Keys.NumPad1)
                 || keyboardNewState.IsKeyDown(Keys.D1) && !_keyboardOldState.IsKeyDown(Keys.D1))
             {
-                _diceResult = _diceRoll[0] + _diceRoll[1];
-                _player.StepsCount = _diceResult;
+
+                _player.StepsCount = PLAYERSTEP;
                 _fieldManager.OldPlayerPosition = new Position(_player.Position);
                 _gameStep = GameStep.Third;
                 _highlightedCells = HighlightedCells.Sum;
@@ -272,8 +251,7 @@ namespace RgbJourney
             if (keyboardNewState.IsKeyDown(Keys.NumPad2) && !_keyboardOldState.IsKeyDown(Keys.NumPad2)
                 || keyboardNewState.IsKeyDown(Keys.D2) && !_keyboardOldState.IsKeyDown(Keys.D2))
             {
-                _diceResult = Math.Abs(_diceRoll[0] - _diceRoll[1]);
-                _player.StepsCount = _diceResult;
+                _player.StepsCount = PLAYERSTEP;
                 _fieldManager.OldPlayerPosition = new Position(_player.Position);
                 _gameStep = GameStep.Third;
                 _highlightedCells = HighlightedCells.Sub;
@@ -297,7 +275,7 @@ namespace RgbJourney
                     else
                     {
                         _player.Position = new Position(_fieldManager.OldPlayerPosition);
-                        _player.StepsCount = _diceResult;
+                        _player.StepsCount = PLAYERSTEP;
                         _illegalTurn = true;
                     }
                 }

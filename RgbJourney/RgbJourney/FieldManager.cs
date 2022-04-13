@@ -99,20 +99,18 @@ namespace RgbJourney
         public bool CheckWinCondition(Position playerPosition) =>
             winCells.Any(x => x.Position.X == playerPosition.X && x.Position.Y == playerPosition.Y);
 
-        public void HighlightPossibleCells(int X, int Y, int[] rolledDice, HighlightedCells highlightedCells)
+        public void HighlightPossibleCells(int X, int Y, int PLAYERSTEP, HighlightedCells highlightedCells)
         {
-            var subDice = Math.Abs(rolledDice[0] - rolledDice[1]);
-            var sumDice = rolledDice[0] + rolledDice[1];
 
             if(highlightedCells == HighlightedCells.Both)
             {
-                HighlightCells(X, Y, subDice, _resourceManager.SubHighlightTexture);
-                HighlightCells(X, Y, sumDice, _resourceManager.SumHighlightTexture);
+                HighlightCells(X, Y, PLAYERSTEP, _resourceManager.SubHighlightTexture);
+                HighlightCells(X, Y, PLAYERSTEP, _resourceManager.SumHighlightTexture);
             }
             else if(highlightedCells == HighlightedCells.Sub)
-                HighlightCells(X, Y, subDice, _resourceManager.SubHighlightTexture);
+                HighlightCells(X, Y, PLAYERSTEP, _resourceManager.SubHighlightTexture);
             else if (highlightedCells == HighlightedCells.Sum)
-                HighlightCells(X, Y, sumDice, _resourceManager.SumHighlightTexture);
+                HighlightCells(X, Y, PLAYERSTEP, _resourceManager.SumHighlightTexture);
 
         }
 
