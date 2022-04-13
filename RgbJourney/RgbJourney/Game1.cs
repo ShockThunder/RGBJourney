@@ -2,16 +2,22 @@
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using RgbJourney.Enums;
+using RgbJourney.Models;
 using System;
 
 namespace RgbJourney
 {
     public class Game1 : Game
     {
+        //Alpha-2 refactor
+        private FieldGenerator _fieldGenerator;
+        private Random _random = new Random();
+        private Field _field;
+
+        // Old code
         private GraphicsDeviceManager _graphics;
         private SpriteBatch _spriteBatch;
         private FieldManager _fieldManager;
-        private int[,] _field;
         private int _fieldSize = 15;
         private int _maxRoll = 6;
         private int _cellSize = 29;
@@ -27,7 +33,6 @@ namespace RgbJourney
         private int _diceResult = 0;
         private bool _isDiceRolled = false;
         private bool _illegalTurn = false;
-        private Random _random = new Random();
 
         private double _gameStartSeconds = 0;
         private double _fullGameTimeInSeconds = 45;
@@ -54,8 +59,13 @@ namespace RgbJourney
         {
             _spriteBatch = new SpriteBatch(GraphicsDevice);
             _resourceManager = new ResourceManager(GraphicsDevice, Content);
-            _fieldManager = new FieldManager(_cellSize, _cellSpacing, _spriteBatch, _resourceManager, _random, _fieldSize);
-            _field = _fieldManager.GenerateArray();
+            _fieldManager = new FieldManager(_cellSize, _cellSpacing, _spriteBatch, _resourceManager, _fieldSize);
+            
+            //Alpha-2 refactor
+            _fieldGenerator = new FieldGenerator(_cellSize, _cellSpacing, _fieldSize, _random);
+            _field = _fieldGenerator.GenerateField();
+            //----
+
             _player = new Player(_cellSize, _cellSpacing, _fieldSize, _spriteBatch, _resourceManager);
             _uiManager = new UIManager(_cellSize, _cellSpacing,
                 GraphicsDevice.Viewport.Width,

@@ -26,9 +26,25 @@ namespace RgbJourney
             this.FieldX = FieldX;
             this.FieldY = FieldY;
         }
+
+        /// <summary>
+        /// X-coordinate in pixels
+        /// </summary>
         public int X { get; set; }
+
+        /// <summary>
+        /// Y-coordinate in pixels
+        /// </summary>
         public int Y { get; set; }
+
+        /// <summary>
+        /// Row number
+        /// </summary>       
         public int FieldX { get; set; }
+
+        /// <summary>
+        /// Column number
+        /// </summary>
         public int FieldY { get; set; }
     }
 }
