@@ -21,8 +21,7 @@ namespace RgbJourney
         private SpriteBatch _spriteBatch;
         private FieldManager _fieldManager;
         private int _fieldSize = 15;
-        private int _maxRoll = 6;
-        private int _cellSize = 29;
+        private int _cellSize = 45;
         private int _cellSpacing = 2;
         private Player _player;
         private UIManager _uiManager;
@@ -49,6 +48,10 @@ namespace RgbJourney
         protected override void Initialize()
         {
             // TODO: Add your initialization logic here
+            _graphics.PreferredBackBufferWidth = 1200;
+            _graphics.PreferredBackBufferHeight = 700;
+            _graphics.ApplyChanges();
+
             _gamePhase = GamePhase.TitleScreen;
 
             _gameStep = GameStep.First;
@@ -113,7 +116,6 @@ namespace RgbJourney
                 || keyboardNewState.IsKeyDown(Keys.D1) && !_keyboardOldState.IsKeyDown(Keys.D1))
             {
                 _fieldSize = 15;
-                _maxRoll = 3;
                 LoadContent();
                 _gamePhase = GamePhase.Game;
                 _gameStep = GameStep.First;
@@ -123,7 +125,6 @@ namespace RgbJourney
                 || keyboardNewState.IsKeyDown(Keys.D2) && !_keyboardOldState.IsKeyDown(Keys.D2))
             {
                 _fieldSize = 9;
-                _maxRoll = 3;
                 LoadContent();
                 _gamePhase = GamePhase.Game;
                 _gameStep = GameStep.First;
@@ -339,15 +340,6 @@ namespace RgbJourney
             }
             //Calcualte right cell
 
-        }
-
-        private int[] RollDice()
-        {
-            var diceRoll = new int[2];
-            diceRoll[0] = _random.Next(1, _maxRoll + 1);
-            diceRoll[1] = _random.Next(1, _maxRoll + 1);
-
-            return diceRoll;
         }
     }
 }

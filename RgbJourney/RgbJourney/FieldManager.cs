@@ -37,8 +37,8 @@ namespace RgbJourney
 
             // Draw back texture
             // Steps calculated manually by measuring the screen and texture
-            var calculatedHorizontalSteps = 7;
-            var calculatedVerticalSteps = 4;
+            var calculatedHorizontalSteps = 10;
+            var calculatedVerticalSteps = 6;
 
             for (int i = 0; i < calculatedHorizontalSteps; i++)
             {
