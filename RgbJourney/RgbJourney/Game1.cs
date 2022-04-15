@@ -38,10 +38,16 @@ namespace RgbJourney
 
         private KeyboardState _keyboardOldState = Keyboard.GetState();
 
+        private GameStateManager _gameStateManager;
+
         public Game1()
         {
             _graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
+            Components.Add(new InputHandler(this));
+            _gameStateManager = new GameStateManager(this);
+            Components.Add(_gameStateManager);
+
             IsMouseVisible = true;
         }
 
