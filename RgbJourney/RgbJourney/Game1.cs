@@ -62,8 +62,17 @@ namespace RgbJourney
         {
             _spriteBatch = new SpriteBatch(GraphicsDevice);
             _resourceManager = new ResourceManager(GraphicsDevice, Content);
-            _fieldManager = new FieldManager(_cellSize, _cellSpacing, _spriteBatch, _resourceManager, _fieldSize);
+
+            ResetGameState();
             
+
+            // TODO: use this.Content to load your game content here
+        }
+
+        private void ResetGameState()
+        {
+            _fieldManager = new FieldManager(_cellSize, _cellSpacing, _spriteBatch, _resourceManager, _fieldSize);
+
             //Alpha-2 refactor
             _fieldGenerator = new FieldGenerator(_cellSize, _cellSpacing, _fieldSize, _random);
             _field = _fieldGenerator.GenerateField();
@@ -71,12 +80,10 @@ namespace RgbJourney
             //----
 
             _player = new Player(_cellSize, _cellSpacing, _fieldSize, _spriteBatch, _resourceManager);
+            _fieldManager.OldPlayerPosition = new Position(_player.Position);
             _uiManager = new UIManager(_cellSize, _cellSpacing,
                 GraphicsDevice.Viewport.Width,
                 GraphicsDevice.Viewport.Height, _fieldSize, _spriteBatch, _resourceManager);
-
-            _fieldManager.OldPlayerPosition = new Position(_player.Position);
-            // TODO: use this.Content to load your game content here
         }
 
         protected override void Update(GameTime gameTime)
@@ -116,7 +123,7 @@ namespace RgbJourney
                 || keyboardNewState.IsKeyDown(Keys.D1) && !_keyboardOldState.IsKeyDown(Keys.D1))
             {
                 _fieldSize = 15;
-                LoadContent();
+                ResetGameState();
                 _gamePhase = GamePhase.Game;
                 _gameStep = GameStep.First;
                 _gameStartSeconds = gameTime.TotalGameTime.TotalSeconds;
@@ -125,7 +132,7 @@ namespace RgbJourney
                 || keyboardNewState.IsKeyDown(Keys.D2) && !_keyboardOldState.IsKeyDown(Keys.D2))
             {
                 _fieldSize = 9;
-                LoadContent();
+                ResetGameState();
                 _gamePhase = GamePhase.Game;
                 _gameStep = GameStep.First;
                 _gameStartSeconds = gameTime.TotalGameTime.TotalSeconds;

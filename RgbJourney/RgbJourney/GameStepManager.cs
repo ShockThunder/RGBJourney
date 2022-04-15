@@ -9,6 +9,8 @@ namespace RgbJourney
     {
         private readonly Random _random;
 
+        public GameStep CurrentStep;
+
         /// <summary>
         /// Handle game steps and manage turn structure 
         /// </summary>
@@ -16,6 +18,7 @@ namespace RgbJourney
         public GameStepManager(Random random)
         {
             _random = random;
+            CurrentStep = GameStep.First;
         }
 
         public CustomColor GenerateTargetColor()
