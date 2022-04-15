@@ -2,6 +2,7 @@
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using RgbJourney.Enums;
+using RgbJourney.GameScreens;
 using RgbJourney.Models;
 using System;
 
@@ -13,12 +14,23 @@ namespace RgbJourney
         private FieldGenerator _fieldGenerator;
         private Random _random = new Random();
         private Field _field;
+        
+        private GraphicsDeviceManager _graphics;
         private GameStepManager _gameStepManager;
+        public SpriteBatch SpriteBatch { get; set; }
+        public TitleScreen TitleScreen { get; set; }
+
+        public const int ScreenWidth = 1200;
+        public const int ScreenHeight = 700;
+
+        public readonly Rectangle ScreenRectangle = new Rectangle(
+            0, 0, ScreenWidth, ScreenHeight);
+
         private int PLAYERSTEP = 4;
 
+        
+
         // Old code
-        private GraphicsDeviceManager _graphics;
-        private SpriteBatch _spriteBatch;
         private FieldManager _fieldManager;
         private int _fieldSize = 15;
         private int _cellSize = 45;
@@ -44,18 +56,21 @@ namespace RgbJourney
         {
             _graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
+            IsMouseVisible = true;
+
             Components.Add(new InputHandler(this));
             _gameStateManager = new GameStateManager(this);
             Components.Add(_gameStateManager);
 
-            IsMouseVisible = true;
+            TitleScreen = new TitleScreen(this, _gameStateManager);
+            _gameStateManager.ChangeState(TitleScreen);
         }
 
         protected override void Initialize()
         {
             // TODO: Add your initialization logic here
-            _graphics.PreferredBackBufferWidth = 1200;
-            _graphics.PreferredBackBufferHeight = 700;
+            _graphics.PreferredBackBufferWidth = ScreenWidth;
+            _graphics.PreferredBackBufferHeight = ScreenHeight;
             _graphics.ApplyChanges();
 
             _gamePhase = GamePhase.TitleScreen;
@@ -66,7 +81,7 @@ namespace RgbJourney
 
         protected override void LoadContent()
         {
-            _spriteBatch = new SpriteBatch(GraphicsDevice);
+            SpriteBatch = new SpriteBatch(GraphicsDevice);
             _resourceManager = new ResourceManager(GraphicsDevice, Content);
 
             ResetGameState();
@@ -77,7 +92,7 @@ namespace RgbJourney
 
         private void ResetGameState()
         {
-            _fieldManager = new FieldManager(_cellSize, _cellSpacing, _spriteBatch, _resourceManager, _fieldSize);
+            _fieldManager = new FieldManager(_cellSize, _cellSpacing, SpriteBatch, _resourceManager, _fieldSize);
 
             //Alpha-2 refactor
             _fieldGenerator = new FieldGenerator(_cellSize, _cellSpacing, _fieldSize, _random);
@@ -85,11 +100,11 @@ namespace RgbJourney
             _gameStepManager = new GameStepManager(_random);
             //----
 
-            _player = new Player(_cellSize, _cellSpacing, _fieldSize, _spriteBatch, _resourceManager);
+            _player = new Player(_cellSize, _cellSpacing, _fieldSize, SpriteBatch, _resourceManager);
             _fieldManager.OldPlayerPosition = new Position(_player.Position);
             _uiManager = new UIManager(_cellSize, _cellSpacing,
                 GraphicsDevice.Viewport.Width,
-                GraphicsDevice.Viewport.Height, _fieldSize, _spriteBatch, _resourceManager);
+                GraphicsDevice.Viewport.Height, _fieldSize, SpriteBatch, _resourceManager);
         }
 
         protected override void Update(GameTime gameTime)
@@ -174,29 +189,29 @@ namespace RgbJourney
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
-            _spriteBatch.Begin();
+            SpriteBatch.Begin();
             // TODO: Add your drawing code here
+            
+            //switch (_gamePhase)
+            //{
+            //    case GamePhase.TitleScreen:
+            //        DrawTitleScreen();
+            //        break;
+            //    case GamePhase.Game:
+            //        DrawGameScreen(gameTime);
+            //        break;
+            //    case GamePhase.WinScreen:
+            //        DrawWinScreen();
+            //        break;
+            //    case GamePhase.LoseScreen:
+            //        DrawLoseScreen();
+            //        break;
+            //    default:
+            //        break;
+            //}
 
-            switch (_gamePhase)
-            {
-                case GamePhase.TitleScreen:
-                    DrawTitleScreen();
-                    break;
-                case GamePhase.Game:
-                    DrawGameScreen(gameTime);
-                    break;
-                case GamePhase.WinScreen:
-                    DrawWinScreen();
-                    break;
-                case GamePhase.LoseScreen:
-                    DrawLoseScreen();
-                    break;
-                default:
-                    break;
-            }
 
-
-            _spriteBatch.End();
+            SpriteBatch.End();
 
 
             base.Draw(gameTime);
