@@ -61,6 +61,13 @@
 /processorParam:TextureFormat=Color
 /build:BlueTrap.png
 
+#begin Fonts/ControlFont.spritefont
+/importer:FontDescriptionImporter
+/processor:FontDescriptionProcessor
+/processorParam:PremultiplyAlpha=True
+/processorParam:TextureFormat=Compressed
+/build:Fonts/ControlFont.spritefont
+
 #begin Green2.png
 /importer:TextureImporter
 /processor:TextureProcessor

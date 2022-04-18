@@ -18,7 +18,11 @@ namespace RgbJourney
         private GraphicsDeviceManager _graphics;
         private GameStepManager _gameStepManager;
         public SpriteBatch SpriteBatch { get; set; }
-        public TitleScreen TitleScreen { get; set; }
+
+        #region Game Screens
+        public TitleScreen TitleScreen { get; private set; }
+        public StartMenuScreen StartMenuScreen { get; private set; }
+        #endregion
 
         public const int ScreenWidth = 1200;
         public const int ScreenHeight = 700;
@@ -63,6 +67,7 @@ namespace RgbJourney
             Components.Add(_gameStateManager);
 
             TitleScreen = new TitleScreen(this, _gameStateManager);
+            StartMenuScreen = new StartMenuScreen(this, _gameStateManager);
             _gameStateManager.ChangeState(TitleScreen);
         }
 
