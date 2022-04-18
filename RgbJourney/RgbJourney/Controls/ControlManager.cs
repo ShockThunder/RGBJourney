@@ -12,6 +12,8 @@ namespace RgbJourney.Controls
         private int _selectedControl = 0;
         public static SpriteFont SpriteFont;
 
+        public EventHandler FocusChanged;
+
         public ControlManager(SpriteFont spriteFont) : base()
         {
             SpriteFont = spriteFont;
@@ -69,7 +71,12 @@ namespace RgbJourney.Controls
                     _selectedControl = 0;
 
                 if (this[_selectedControl].TabStop && this[_selectedControl].Enabled)
+                {
+                    if(FocusChanged != null)
+                        FocusChanged(this[_selectedControl], EventArgs.Empty);
+                    
                     break;
+                }
 
             } while (currentControl != _selectedControl);
 
@@ -91,7 +98,12 @@ namespace RgbJourney.Controls
                     _selectedControl = 0;
 
                 if (this[_selectedControl].TabStop && this[_selectedControl].Enabled)
+                {
+                    if (FocusChanged != null)
+                        FocusChanged(this[_selectedControl], EventArgs.Empty);
+
                     break;
+                }
 
             } while (currentControl != _selectedControl);
 
