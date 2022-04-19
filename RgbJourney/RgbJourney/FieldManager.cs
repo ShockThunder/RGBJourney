@@ -33,22 +33,6 @@ namespace RgbJourney
 
         public void DrawField(Field field)
         {
-
-
-            // Draw back texture
-            // Steps calculated manually by measuring the screen and texture
-            var calculatedHorizontalSteps = 10;
-            var calculatedVerticalSteps = 6;
-
-            for (int i = 0; i < calculatedHorizontalSteps; i++)
-            {
-                for (int j = 0; j < calculatedVerticalSteps; j++)
-                {
-                    var sourceRec = new Rectangle(0, 0, 256, 256);
-                    _spriteBatch.Draw(_resourceManager.BackTexture, new Vector2(0 + 128 * i, 0 + 128 * j), sourceRec, Color.White, 0.0f, new Vector2(0), 0.5f, SpriteEffects.None, 0);
-                }
-            }
-
             // Draw main field
             var cellSize = field.CellSize;
 
