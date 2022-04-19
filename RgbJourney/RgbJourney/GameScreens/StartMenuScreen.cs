@@ -53,7 +53,7 @@ namespace RgbJourney.GameScreens
             loadGame = new LinkLabel();
             loadGame.Text = "Load the journey";
             loadGame.Size = loadGame.SpriteFont.MeasureString(loadGame.Text);
-            startGame.Selected += new EventHandler(MenuItem_Selected);
+            loadGame.Selected += new EventHandler(MenuItem_Selected);
             ControlManager.Add(loadGame);
 
             exitGame = new LinkLabel();

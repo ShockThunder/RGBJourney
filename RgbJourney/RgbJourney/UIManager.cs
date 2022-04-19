@@ -46,9 +46,9 @@ namespace RgbJourney
             var blueRect = new Rectangle(leftEdge + cellSize * 2, screenHeight / 10 + cellSize, cellSize, cellSize);
             var greenRect = new Rectangle(leftEdge + cellSize * 4, screenHeight / 10 + cellSize, cellSize, cellSize);
 
-            spriteBatch.Draw(_resourceManager.RedTexture, redRect, Color.White);
-            spriteBatch.Draw(_resourceManager.BlueTexture, blueRect, Color.White);
-            spriteBatch.Draw(_resourceManager.GreenTexture, greenRect, Color.White);
+            //spriteBatch.Draw(_resourceManager.RedTexture, redRect, Color.White);
+            //spriteBatch.Draw(_resourceManager.BlueTexture, blueRect, Color.White);
+            //spriteBatch.Draw(_resourceManager.GreenTexture, greenRect, Color.White);
         }
 
         public void DrawSelectedSquare(CustomColor color)

@@ -9,7 +9,7 @@ using System.Text;
 
 namespace RgbJourney.GameScreens
 {
-    public abstract partial class BaseGameState : GameState
+    public abstract class BaseGameState : GameState
     {
         protected Game1 GameRef;
         protected ControlManager ControlManager;
