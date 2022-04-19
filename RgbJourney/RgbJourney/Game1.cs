@@ -89,7 +89,7 @@ namespace RgbJourney
         protected override void LoadContent()
         {
             SpriteBatch = new SpriteBatch(GraphicsDevice);
-            _resourceManager = new ResourceManager(GraphicsDevice, Content);
+            //_resourceManager = new ResourceManager(GraphicsDevice, Content);
 
             ResetGameState();
             

@@ -25,24 +25,23 @@ namespace RgbJourney
         public SpriteFont Font { get; set; }
         public SpriteFont WinFont { get; set; }
 
-
-        private ContentManager _contentManager;
-
-        public ResourceManager(GraphicsDevice graphicsDevice, ContentManager content)
+        public ResourceManager()
         {
-            _contentManager = content;
+        }
 
-            RedTexture = _contentManager.Load<Texture2D>("Red2");
-            BlueTexture = _contentManager.Load<Texture2D>("Blue2");
-            GreenTexture = _contentManager.Load<Texture2D>("Green2");
-            WhiteTexture = _contentManager.Load<Texture2D>("WinCell");
+        public void LoadContent(GraphicsDevice graphicsDevice, ContentManager content)
+        {
+            RedTexture = content.Load<Texture2D>("Red2");
+            BlueTexture = content.Load<Texture2D>("Blue2");
+            GreenTexture = content.Load<Texture2D>("Green2");
+            WhiteTexture = content.Load<Texture2D>("WinCell");
 
-            PlayerTexture = _contentManager.Load<Texture2D>("Player");
+            PlayerTexture = content.Load<Texture2D>("Player");
 
-            BackTexture = _contentManager.Load<Texture2D>("BackTexture");
+            BackTexture = content.Load<Texture2D>("BackTexture");
 
             SubHighlightTexture = new Texture2D(graphicsDevice, 1, 1);
-            SubHighlightTexture.SetData(new Color[] { new Color(Color.CornflowerBlue, 1f)});
+            SubHighlightTexture.SetData(new Color[] { new Color(Color.CornflowerBlue, 1f) });
 
             SumHighlightTexture = new Texture2D(graphicsDevice, 1, 1);
             SumHighlightTexture.SetData(new Color[] { new Color(Color.DarkRed, 1f) });
@@ -56,8 +55,8 @@ namespace RgbJourney
             BronzeMedal = new Texture2D(graphicsDevice, 1, 1);
             BronzeMedal.SetData(new Color[] { new Color(Color.Brown, 1f) });
 
-            Font = _contentManager.Load<SpriteFont>("PixelFont");
-            WinFont = _contentManager.Load<SpriteFont>("WinFont");
+            Font = content.Load<SpriteFont>("PixelFont");
+            WinFont = content.Load<SpriteFont>("WinFont");
         }
     }
 }

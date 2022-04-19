@@ -1,11 +1,10 @@
 ﻿using Microsoft.Xna.Framework;
 using System;
 using System.Collections.Generic;
-using System.Text;
 
 namespace RgbJourney
 {
-    public abstract partial class GameState : DrawableGameComponent
+    public abstract class GameState : DrawableGameComponent
     {
         List<GameComponent> _childComponents;
 
