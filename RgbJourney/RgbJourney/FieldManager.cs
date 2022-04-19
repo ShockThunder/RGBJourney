@@ -33,37 +33,37 @@ namespace RgbJourney
 
         public void DrawField(Field field)
         {
-            // Draw main field
-            var cellSize = field.CellSize;
+            //// Draw main field
+            //var cellSize = field.CellSize;
 
-            var defaultRect = new Rectangle(0, 0, cellSize, cellSize);
+            //var defaultRect = new Rectangle(0, 0, cellSize, cellSize);
 
-            foreach (var cell in field.Cells)
-            {
-                var rect = defaultRect;
-                rect.X = cell.Position.X;
-                rect.Y = cell.Position.Y;
+            //foreach (var cell in field.Cells)
+            //{
+            //    var rect = defaultRect;
+            //    rect.X = cell.Position.X;
+            //    rect.Y = cell.Position.Y;
 
-                switch (cell.Color)
-                {
-                    case CustomColor.Red:
-                        _spriteBatch.Draw(_resourceManager.RedTexture, rect, Color.White);
-                        break;
-                    case CustomColor.Blue:
-                        _spriteBatch.Draw(_resourceManager.BlueTexture, rect, Color.White);
-                        break;
-                    case CustomColor.Green:
-                        _spriteBatch.Draw(_resourceManager.GreenTexture, rect, Color.White);
-                        break;
-                }
-            }
+            //    switch (cell.Color)
+            //    {
+            //        case CustomColor.Red:
+            //            _spriteBatch.Draw(_resourceManager.RedTexture, rect, Color.White);
+            //            break;
+            //        case CustomColor.Blue:
+            //            _spriteBatch.Draw(_resourceManager.BlueTexture, rect, Color.White);
+            //            break;
+            //        case CustomColor.Green:
+            //            _spriteBatch.Draw(_resourceManager.GreenTexture, rect, Color.White);
+            //            break;
+            //    }
+            //}
 
-            foreach(var winCell in field.WinCells)
-            {
-                defaultRect.X = winCell.Position.X;
-                defaultRect.Y = winCell.Position.Y;
-                _spriteBatch.Draw(_resourceManager.WhiteTexture, defaultRect, Color.White);
-            }
+            //foreach(var winCell in field.WinCells)
+            //{
+            //    defaultRect.X = winCell.Position.X;
+            //    defaultRect.Y = winCell.Position.Y;
+            //    _spriteBatch.Draw(_resourceManager.WhiteTexture, defaultRect, Color.White);
+            //}
 
             //defaultRect.X = field.GetLength(0) / 2 * (_cellSize + _cellSpacing);
             //defaultRect.Y = field.GetLength(0) / 2 * (_cellSize + _cellSpacing);

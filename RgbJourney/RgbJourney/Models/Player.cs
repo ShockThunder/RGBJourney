@@ -1,5 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input;
 using RgbJourney.Enums;
 using System;
 using System.Collections.Generic;
@@ -33,6 +34,19 @@ namespace RgbJourney.Models
         {
             var rec = new Rectangle(Position.X, Position.Y, _cellSize, _cellSize);
             spriteBatch.Draw(_texture, rec, Color.White);
+        }
+
+        public void Update(GameTime gameTime)
+        {
+
+            if (InputHandler.KeyPressed(Keys.Up))
+                MoveUp();
+            if (InputHandler.KeyPressed(Keys.Down))
+                MoveDown();
+            if (InputHandler.KeyPressed(Keys.Left))
+                MoveLeft();
+            if (InputHandler.KeyPressed(Keys.Right))
+                MoveRight();
         }
 
         public void Move()

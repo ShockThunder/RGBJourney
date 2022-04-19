@@ -9,12 +9,6 @@ namespace RgbJourney
 {
     public class ResourceManager
     {
-        public Texture2D RedTexture { get; set; }
-        public Texture2D BlueTexture { get; set; }
-        public Texture2D GreenTexture { get; set; }
-        public Texture2D WhiteTexture { get; set; }
-        public Texture2D PlayerTexture { get; set; }
-        public Texture2D BackTexture { get; set; }
         public Texture2D SubHighlightTexture { get; set; }
         public Texture2D SumHighlightTexture { get; set; }
         public Texture2D GoldMedal { get; set; }
@@ -30,16 +24,7 @@ namespace RgbJourney
         }
 
         public void LoadContent(GraphicsDevice graphicsDevice, ContentManager content)
-        {
-            RedTexture = content.Load<Texture2D>("Red2");
-            BlueTexture = content.Load<Texture2D>("Blue2");
-            GreenTexture = content.Load<Texture2D>("Green2");
-            WhiteTexture = content.Load<Texture2D>("WinCell");
-
-            PlayerTexture = content.Load<Texture2D>("Player");
-
-            BackTexture = content.Load<Texture2D>("BackTexture");
-
+        {     
             SubHighlightTexture = new Texture2D(graphicsDevice, 1, 1);
             SubHighlightTexture.SetData(new Color[] { new Color(Color.CornflowerBlue, 1f) });
 

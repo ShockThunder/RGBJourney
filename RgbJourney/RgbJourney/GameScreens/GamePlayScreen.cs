@@ -16,8 +16,6 @@ namespace RgbJourney.GameScreens
         private int _cellSize = 45;
         private int _cellSpacing = 2;
 
-        FieldGenerator _fieldGenerator;
-        FieldManager _fieldManager;
         ResourceManager _resourceManager;
         Field _field;
         Player _player;
@@ -33,8 +31,9 @@ namespace RgbJourney.GameScreens
         protected override void LoadContent()
         {
             var content = Game.Content;
-
+            
             base.LoadContent();
+
             backgroundImage = new PictureBox(
                 content.Load<Texture2D>("BackTexture"), GameRef.ScreenRectangle);
 
@@ -43,11 +42,8 @@ namespace RgbJourney.GameScreens
             playerTexture = content.Load<Texture2D>("Player");
 
             _player = new Player(_cellSize, _cellSpacing, _fieldSize, playerTexture);
-            _resourceManager = new ResourceManager();
-            _fieldGenerator = new FieldGenerator(_cellSize, _cellSpacing, _fieldSize, new Random());
-            _field = _fieldGenerator.GenerateField();
-            _fieldManager = new FieldManager(_cellSize, _cellSpacing, GameRef.SpriteBatch, _resourceManager, _fieldSize);
-            _resourceManager.LoadContent(GameRef.GraphicsDevice, GameRef.Content);
+            _field = new Field(_cellSize, _cellSpacing, _fieldSize, GameRef.Content);
+            
         }
 
         public override void Initialize()
@@ -60,7 +56,7 @@ namespace RgbJourney.GameScreens
             GameRef.SpriteBatch.Begin();
             base.Draw(gameTime);
             ControlManager.Draw(GameRef.SpriteBatch);
-            _fieldManager.DrawField(_field);
+            _field.Draw(GameRef.SpriteBatch);
             _player.Draw(GameRef.SpriteBatch);
             GameRef.SpriteBatch.End();
         }
@@ -68,15 +64,7 @@ namespace RgbJourney.GameScreens
         public override void Update(GameTime gameTime)
         {
             base.Update(gameTime);
-
-            if (InputHandler.KeyPressed(Keys.Up))
-                _player.MoveUp();
-            if (InputHandler.KeyPressed(Keys.Down))
-                _player.MoveDown();
-            if (InputHandler.KeyPressed(Keys.Left))
-                _player.MoveLeft();
-            if (InputHandler.KeyPressed(Keys.Right))
-                _player.MoveRight();
+            _player.Update(gameTime);
         }
     }
 }
