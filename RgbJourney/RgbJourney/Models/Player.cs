@@ -38,7 +38,6 @@ namespace RgbJourney.Models
 
         public void Update(GameTime gameTime)
         {
-
             if (InputHandler.KeyPressed(Keys.Up))
                 MoveUp();
             if (InputHandler.KeyPressed(Keys.Down))
