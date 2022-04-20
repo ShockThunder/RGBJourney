@@ -16,9 +16,9 @@ namespace RgbJourney.Models
         {
             MaxStamina = maxStamina;
             CurrentStamina = maxStamina;
-            RedKeys = 10;
-            GreenKeys = 10;
-            BlueKeys = 10;
+            RedKeys = 9;
+            GreenKeys = 8;
+            BlueKeys = 7;
         }
     }
 }

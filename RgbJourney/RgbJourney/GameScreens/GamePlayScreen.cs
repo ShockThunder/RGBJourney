@@ -18,8 +18,8 @@ namespace RgbJourney.GameScreens
         private CustomColor _selectedColor;
         private GameStep _gameStep;
         private GameStepManager _gameStepManager = new GameStepManager(new Random());
-
-        private Label _targetColorLabel;
+        private UIManager _uiManager;
+        
 
         Field _field;
         Player _player;
@@ -49,12 +49,12 @@ namespace RgbJourney.GameScreens
 
             _player = new Player(_cellSize, _cellSpacing, _fieldSize, playerTexture);
             _field = new Field(_cellSize, _cellSpacing, _fieldSize, GameRef.Content);
+            _uiManager = new UIManager(GameRef);
             _gameStep = GameStep.First;
 
             var targetPosition = new Vector2(800, 100);
-            var labelPosition = new Vector2(800, 70);
 
-            redTargetColor = new PictureBox(content.Load<Texture2D>("Red2"), new Rectangle(0,0,_cellSize, _cellSize), new Rectangle(0, 0, _cellSize, _cellSize));
+            redTargetColor = new PictureBox(content.Load<Texture2D>("Red2"), new Rectangle(0, 0, _cellSize, _cellSize), new Rectangle(0, 0, _cellSize, _cellSize));
             redTargetColor.Enabled = false;
             redTargetColor.Visible = false;
             redTargetColor.HasFocus = false;
@@ -77,15 +77,6 @@ namespace RgbJourney.GameScreens
             greenTargetColor.TabStop = false;
             greenTargetColor.SetPosition(targetPosition);
             ControlManager.Add(greenTargetColor);
-
-            _targetColorLabel = new Label();
-            _targetColorLabel.Text = "Target Color";
-            _targetColorLabel.Visible = true;
-            _targetColorLabel.TabStop = false;
-            _targetColorLabel.HasFocus = false;
-            _targetColorLabel.Enabled = false;
-            _targetColorLabel.Position = labelPosition;
-            ControlManager.Add(_targetColorLabel);
         }
 
         public override void Initialize()
@@ -106,7 +97,7 @@ namespace RgbJourney.GameScreens
             _field.Draw(GameRef.SpriteBatch);
             _player.Draw(GameRef.SpriteBatch);
             ControlManager.Draw(GameRef.SpriteBatch);
-
+            _uiManager.Draw(GameRef.SpriteBatch);
             GameRef.SpriteBatch.End();
         }
 
@@ -114,6 +105,7 @@ namespace RgbJourney.GameScreens
         {
             base.Update(gameTime);
             _player.Update(gameTime);
+            _uiManager.Update(gameTime, _player);
             HandleGame();
         }
 
@@ -182,6 +174,7 @@ namespace RgbJourney.GameScreens
                 x.Position.FieldX == _player.Position.FieldX 
                 && x.Position.FieldY == _player.Position.FieldY);
 
+            //Для проверки можно вставить _selectedColor
             _player.OpenCell(playerCell.Color);
             _gameStep = GameStep.Fourth;
         }

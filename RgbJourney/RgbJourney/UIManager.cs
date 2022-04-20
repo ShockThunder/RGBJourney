@@ -1,131 +1,127 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
-using RgbJourney.Enums;
-using System;
-using System.Collections.Generic;
-using System.Text;
+using RgbJourney.Controls;
+using RgbJourney.Models;
+using System.IO;
 
 namespace RgbJourney
 {
     public class UIManager
     {
-        public UIManager(int cellSize, int cellSpacing, int screenWidth,
-            int screenHeight, int fieldSize, SpriteBatch spriteBatch, ResourceManager resourceManager)
+        private Label _targetColorLabel;
+        private Label _keysLabel;
+        private Label _redValueLabel;
+        private Label _blueValueLabel;
+        private Label _greenValueLabel;
+
+        private PictureBox _redKeyLabel;
+        private PictureBox _blueKeyLabel;
+        private PictureBox _greenKeyLabel;
+
+        private ControlManager ControlManager;
+        private ContentManager Content;
+
+        private int squareSpace = 40;
+        private PlayerIndex playerIndex = PlayerIndex.One;
+        public UIManager(Game game)
         {
-            this.cellSize = cellSize;
-            this.cellSpacing = cellSpacing;
-            this.screenWidth = screenWidth;
-            this.screenHeight = screenHeight;
-            this.spriteBatch = spriteBatch;
-            _resourceManager = resourceManager;
-            leftEdge = (cellSize + cellSpacing) * (fieldSize + 1);
+            Content = game.Content;
+            var menuFont = Content.Load<SpriteFont>(Path.Combine("Fonts", "ControlFont"));
+            ControlManager = new ControlManager(menuFont);
+
+            Initialize();
         }
 
-        private int cellSize;
-        private int cellSpacing;
-        private readonly int screenWidth;
-        private readonly int screenHeight;
-        private int leftEdge;
-        private readonly SpriteBatch spriteBatch;
-        private readonly GraphicsDevice graphicsDevice;
-        private readonly ResourceManager _resourceManager;
-
-
-
-        public void Draw()
+        public void Initialize()
         {
-            string colorMsg = "Select target";
-            spriteBatch.DrawString(_resourceManager.Font, colorMsg, new Vector2(leftEdge, screenHeight / 10 - cellSize), Color.Black);
+            var keysLabelPosition = new Vector2(800, 150);
+            var colorsLabelPosition = new Vector2(800, 200);
+            var keysValueLabelPosition = new Vector2(800, 250);
+            var targetLabelPosition = new Vector2(800, 70);
 
-            spriteBatch.DrawString(_resourceManager.Font, "1", new Vector2(leftEdge, screenHeight / 10), Color.Black);
-            spriteBatch.DrawString(_resourceManager.Font, "2", new Vector2(leftEdge + cellSize * 2, screenHeight / 10), Color.Black);
-            spriteBatch.DrawString(_resourceManager.Font, "3", new Vector2(leftEdge + cellSize * 4, screenHeight / 10), Color.Black);
 
-            var redRect = new Rectangle(leftEdge, screenHeight / 10 + cellSize, cellSize, cellSize);
-            var blueRect = new Rectangle(leftEdge + cellSize * 2, screenHeight / 10 + cellSize, cellSize, cellSize);
-            var greenRect = new Rectangle(leftEdge + cellSize * 4, screenHeight / 10 + cellSize, cellSize, cellSize);
+            _targetColorLabel = new Label();
+            _targetColorLabel.Text = "Target Color";
+            _targetColorLabel.Visible = true;
+            _targetColorLabel.TabStop = false;
+            _targetColorLabel.HasFocus = false;
+            _targetColorLabel.Enabled = false;
+            _targetColorLabel.Position = targetLabelPosition;
+            ControlManager.Add(_targetColorLabel);
 
-            //spriteBatch.Draw(_resourceManager.RedTexture, redRect, Color.White);
-            //spriteBatch.Draw(_resourceManager.BlueTexture, blueRect, Color.White);
-            //spriteBatch.Draw(_resourceManager.GreenTexture, greenRect, Color.White);
+            _keysLabel = new Label();
+            _keysLabel.Text = "Remained Keys";
+            _keysLabel.Visible = true;
+            _keysLabel.TabStop = false;
+            _keysLabel.HasFocus = false;
+            _keysLabel.Enabled = false;
+            _keysLabel.Position = keysLabelPosition;
+            ControlManager.Add(_keysLabel);
+
+            _redKeyLabel = new PictureBox(Content.Load<Texture2D>("Red2"), new Rectangle(0, 0, squareSpace, squareSpace), new Rectangle(0, 0, squareSpace, squareSpace));
+            _redKeyLabel.Enabled = false;
+            _redKeyLabel.Visible = true;
+            _redKeyLabel.HasFocus = false;
+            _redKeyLabel.TabStop = false;
+            _redKeyLabel.SetPosition(colorsLabelPosition);
+            ControlManager.Add(_redKeyLabel);
+
+            _blueKeyLabel = new PictureBox(Content.Load<Texture2D>("Blue2"), new Rectangle(0, 0, squareSpace, squareSpace), new Rectangle(0, 0, squareSpace, squareSpace));
+            _blueKeyLabel.Enabled = false;
+            _blueKeyLabel.Visible = true;
+            _blueKeyLabel.HasFocus = false;
+            _blueKeyLabel.TabStop = false;
+            _blueKeyLabel.SetPosition(new Vector2(colorsLabelPosition.X + squareSpace + 10f, colorsLabelPosition.Y));
+            ControlManager.Add(_blueKeyLabel);
+
+            _greenKeyLabel = new PictureBox(Content.Load<Texture2D>("Green2"), new Rectangle(0, 0, squareSpace, squareSpace), new Rectangle(0, 0, squareSpace, squareSpace));
+            _greenKeyLabel.Enabled = false;
+            _greenKeyLabel.Visible = true;
+            _greenKeyLabel.HasFocus = false;
+            _greenKeyLabel.TabStop = false;
+            _greenKeyLabel.SetPosition(new Vector2(colorsLabelPosition.X + (squareSpace + 10f) * 2, colorsLabelPosition.Y));
+            ControlManager.Add(_greenKeyLabel);
+
+            _redValueLabel = new Label();
+            _redValueLabel.Visible = true;
+            _redValueLabel.TabStop = false;
+            _redValueLabel.HasFocus = false;
+            _redValueLabel.Enabled = false;
+            _redValueLabel.Text = "R";
+            _redValueLabel.Position = keysValueLabelPosition;
+            ControlManager.Add(_redValueLabel);
+
+            _blueValueLabel = new Label();
+            _blueValueLabel.Visible = true;
+            _blueValueLabel.TabStop = false;
+            _blueValueLabel.HasFocus = false;
+            _blueValueLabel.Enabled = false;
+            _blueValueLabel.Text = "B";
+            _blueValueLabel.Position = new Vector2(keysValueLabelPosition.X + squareSpace + 10f, keysValueLabelPosition.Y);
+            ControlManager.Add(_blueValueLabel);
+
+            _greenValueLabel = new Label();
+            _greenValueLabel.Visible = true;
+            _greenValueLabel.TabStop = false;
+            _greenValueLabel.HasFocus = false;
+            _greenValueLabel.Enabled = false;
+            _greenValueLabel.Text = "G";
+            _greenValueLabel.Position = new Vector2(keysValueLabelPosition.X + (squareSpace + 10f) * 2, keysValueLabelPosition.Y); ;
+            ControlManager.Add(_greenValueLabel);
+        }    
+
+        public void Update(GameTime gameTime, Player player)
+        {
+            _redValueLabel.Text = player.Character.RedKeys.ToString();
+            _blueValueLabel.Text = player.Character.BlueKeys.ToString();
+            _greenValueLabel.Text = player.Character.GreenKeys.ToString();
+            ControlManager.Update(gameTime, playerIndex);
         }
 
-        public void DrawSelectedSquare(CustomColor color)
+        public void Draw(SpriteBatch spriteBatch)
         {
-            string colorName = string.Empty;
-            switch (color)
-            {
-                case CustomColor.Red:
-                    colorName = "1";
-                    break;
-                case CustomColor.Blue:
-                    colorName = "2"; break;
-                case CustomColor.Green:
-                    colorName = "3"; break;
-                default:
-                    break;
-            }
-            string colorMsg = $"You selected {colorName}";
-            spriteBatch.DrawString(_resourceManager.Font, colorMsg, new Vector2(leftEdge, screenHeight / 10 + cellSize * 2 + cellSize / 2), Color.Black);
-        }
-
-        public void DrawDiceResult(int[] diceRoll, int diceResult)
-        {
-            string diceMessage = $"You rolled {diceRoll[0]} and {diceRoll[1]}";
-            string hintMessage = " 1 - sum, 2 - sub.";
-            spriteBatch.DrawString(_resourceManager.Font, diceMessage, new Vector2(leftEdge, screenHeight / 10 + cellSize * 4), Color.Black);
-            spriteBatch.DrawString(_resourceManager.Font, hintMessage, new Vector2(leftEdge, screenHeight / 10 + cellSize * 5), Color.Black);
-            spriteBatch.DrawString(_resourceManager.Font, $"Roll result - {diceResult}", new Vector2(leftEdge, screenHeight / 10 + cellSize * 6), Color.Black);
-        }
-
-        public void DrawIllegalTurn()
-        {
-            string message1 = $"Non legal turn!";
-            spriteBatch.DrawString(_resourceManager.Font, message1, new Vector2(leftEdge, screenHeight / 10 + cellSize * 10), Color.Red);
-        }
-
-        public void DrawWinText()
-        {
-            string message = "YOU WIN!";
-            spriteBatch.DrawString(_resourceManager.WinFont, message, new Vector2(screenWidth / 3, screenHeight / 3), Color.Black, 0.0f, new Vector2(0 ,0), 1f, SpriteEffects.None, 0);
-            spriteBatch.DrawString(_resourceManager.WinFont, message, new Vector2(screenWidth / 3 + 5, screenHeight / 3 + 5), Color.White, 0.0f, new Vector2(0 ,0), 1f, SpriteEffects.None, 0);
-        }
-
-        public void DrawTimer(double gameStartSeconds, double currentSeconds)
-        {
-            var time = currentSeconds - gameStartSeconds;
-            var stringTime = time.ToString("F2");
-            var medal = new Rectangle(screenWidth - cellSize * 7, screenHeight - cellSize * 2, cellSize, cellSize);
-            var texture = _resourceManager.GoldMedal;
-
-            spriteBatch.DrawString(_resourceManager.Font, stringTime, new Vector2(screenWidth - cellSize * 5, screenHeight - cellSize * 2), Color.Black, 0.0f, new Vector2(0, 0), 1f, SpriteEffects.None, 0);
-            
-            if(time > 15 && time < 30)
-                texture = _resourceManager.SilverMedal;
-            if (time > 30)
-                texture = _resourceManager.BronzeMedal;
-
-            spriteBatch.Draw(texture, medal, Color.White);
-        }
-
-        public void DrawTitleScreen()
-        {
-            string message = "Press 1 for big field or 2 for small field";
-
-            var size = _resourceManager.Font.MeasureString(message);
-
-            var rec = new Rectangle(screenWidth / 5, screenHeight / 3 + cellSize * 4, (int)size.X, (int)size.Y);
-
-            spriteBatch.Draw(_resourceManager.SilverMedal, rec, Color.White);
-            spriteBatch.DrawString(_resourceManager.Font, message, new Vector2(screenWidth / 5, screenHeight / 3 + cellSize * 4), Color.Black, 0.0f, new Vector2(0, 0), 1f, SpriteEffects.None, 0);
-        }
-
-        public void DrawLoseText()
-        {
-            string message = "YOU LOSE!";
-            spriteBatch.DrawString(_resourceManager.WinFont, message, new Vector2(screenWidth / 3, screenHeight / 3), Color.Black, 0.0f, new Vector2(0, 0), 1f, SpriteEffects.None, 0);
-            spriteBatch.DrawString(_resourceManager.WinFont, message, new Vector2(screenWidth / 3 + 5, screenHeight / 3 + 5), Color.White, 0.0f, new Vector2(0, 0), 1f, SpriteEffects.None, 0);
+            ControlManager.Draw(spriteBatch);
         }
     }
 }
