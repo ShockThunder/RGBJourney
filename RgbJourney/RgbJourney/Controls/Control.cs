@@ -1,8 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace RgbJourney.Controls
 {
@@ -41,6 +39,11 @@ namespace RgbJourney.Controls
             {
                 Selected(this, e);
             }
+        }
+
+        public virtual Rectangle GetBounds()
+        {
+            return new Rectangle((int)Position.X, (int)Position.Y, (int)Size.X, (int)Size.Y);
         }
     }
 }

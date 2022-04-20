@@ -3,7 +3,6 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System;
 using System.Collections.Generic;
-using System.Text;
 
 namespace RgbJourney.Controls
 {
@@ -51,9 +50,34 @@ namespace RgbJourney.Controls
 
         public void Draw(SpriteBatch spriteBatch)
         {
+            var mouse = InputHandler.MouseAsVector2();
+
             foreach (var control in this)
+            {
                 if (control.Visible)
+                {
                     control.Draw(spriteBatch);
+
+                    if (control.GetBounds().Contains(mouse))
+                    {
+                        foreach (var c in this)
+                        {
+                            c.HasFocus = false;
+                        }
+
+                        control.HasFocus = true;
+
+                        if (control.TabStop && control.Enabled)
+                        {
+                            if (FocusChanged != null)
+                            {
+                                _selectedControl = IndexOf(control);
+                                FocusChanged(control, EventArgs.Empty);
+                            }
+                        }
+                    }
+                }
+            }
         }
 
         public void NextControl()
@@ -94,8 +118,9 @@ namespace RgbJourney.Controls
             do
             {
                 _selectedControl--;
-                if (_selectedControl == Count - 1)
-                    _selectedControl = 0;
+                
+                if (_selectedControl < 0)
+                    _selectedControl = Count - 1;
 
                 if (this[_selectedControl].TabStop && this[_selectedControl].Enabled)
                 {

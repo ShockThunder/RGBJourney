@@ -1,12 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input;
 using RgbJourney.Controls;
 using RgbJourney.Models;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Text;
 
 namespace RgbJourney.GameScreens
 {
@@ -16,11 +11,10 @@ namespace RgbJourney.GameScreens
         private int _cellSize = 45;
         private int _cellSpacing = 2;
 
-        ResourceManager _resourceManager;
         Field _field;
         Player _player;
 
-        private PictureBox backgroundImage;
+        private Texture2D backgroundImage;
         private Texture2D playerTexture;
 
         public GamePlayScreen(Game game, GameStateManager stateManager) : base(game, stateManager)
@@ -33,11 +27,8 @@ namespace RgbJourney.GameScreens
             var content = Game.Content;
             
             base.LoadContent();
-
-            backgroundImage = new PictureBox(
-                content.Load<Texture2D>("BackTexture"), GameRef.ScreenRectangle);
-
-            ControlManager.Add(backgroundImage);
+            
+            backgroundImage = content.Load<Texture2D>("BackTexture");           
 
             playerTexture = content.Load<Texture2D>("Player");
 
@@ -56,8 +47,15 @@ namespace RgbJourney.GameScreens
             GameRef.SpriteBatch.Begin();
             base.Draw(gameTime);
             ControlManager.Draw(GameRef.SpriteBatch);
+
+            GameRef.SpriteBatch.Draw(
+               backgroundImage,
+               GameRef.ScreenRectangle,
+               Color.White);
+
             _field.Draw(GameRef.SpriteBatch);
             _player.Draw(GameRef.SpriteBatch);
+
             GameRef.SpriteBatch.End();
         }
 
