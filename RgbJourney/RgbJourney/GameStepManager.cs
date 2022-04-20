@@ -24,7 +24,7 @@ namespace RgbJourney
         public CustomColor GenerateTargetColor()
         {
             var values = Enum.GetValues(typeof(CustomColor));
-            return (CustomColor)values.GetValue(_random.Next(values.Length));
+            return (CustomColor)values.GetValue(_random.Next(values.Length - 1));
         }
     }
 }

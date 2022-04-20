@@ -2,21 +2,18 @@
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using RgbJourney.Enums;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace RgbJourney.Models
 {
     public class Player
     {
         public Position Position { get; set; } = new Position();
-        public int StepsCount = 0;
-        public MovementDirection Direction = MovementDirection.NotSet;
 
         private int _cellSize;
         private int _cellSpacing;
         private Texture2D _texture { get; set; }
+
+        public Character Character { get; set; }
 
         public Player(int stepSize, int borderThickness, int fieldSize, Texture2D texture)
         {
@@ -28,6 +25,8 @@ namespace RgbJourney.Models
             Position.FieldY = fieldSize / 2;
 
             _texture = texture;
+
+            Character = new Character(4);
         }
 
         public void Draw(SpriteBatch spriteBatch)
@@ -48,52 +47,63 @@ namespace RgbJourney.Models
                 MoveRight();
         }
 
-        public void Move()
-        {
-            switch (Direction)
-            {
-                case MovementDirection.Up:
-                    MoveUp();
-                    break;
-                case MovementDirection.Down:
-                    MoveDown();
-                    break;
-                case MovementDirection.Left:
-                    MoveLeft();
-                    break;
-                case MovementDirection.Right:
-                    MoveRight();
-                    break;
-                default:
-                    break;
-            }
-        }
-
         public void MoveRight()
         {
-            Position.X = Position.X + _cellSize + _cellSpacing;
-            Position.FieldX += 1;
-            StepsCount--;
+            if(Character.CurrentStamina > 0)
+            {
+                Position.X = Position.X + _cellSize + _cellSpacing;
+                Position.FieldX += 1;
+                Character.CurrentStamina--;
+            }
         }
 
         public void MoveLeft()
         {
-            Position.X = Position.X - (_cellSize + _cellSpacing);
-            Position.FieldX -= 1;
-            StepsCount--;
+            if (Character.CurrentStamina > 0)
+            {
+                Position.X = Position.X - (_cellSize + _cellSpacing);
+                Position.FieldX -= 1;
+                Character.CurrentStamina--;
+            }                
         }
 
         public void MoveUp()
         {
-            Position.Y = Position.Y - (_cellSize + _cellSpacing);
-            Position.FieldY -= 1;
-            StepsCount--;
+            if (Character.CurrentStamina > 0)
+            {
+                Position.Y = Position.Y - (_cellSize + _cellSpacing);
+                Position.FieldY -= 1;
+                Character.CurrentStamina--;
+            }                
         }
         public void MoveDown()
         {
-            Position.Y = Position.Y + _cellSize + _cellSpacing;
-            Position.FieldY += 1;
-            StepsCount--;
+            if (Character.CurrentStamina > 0)
+            {
+                Position.Y = Position.Y + _cellSize + _cellSpacing;
+                Position.FieldY += 1;
+                Character.CurrentStamina--;
+            }                
+        }
+
+        public void OpenCell(CustomColor color)
+        {
+            switch (color)
+            {
+                case CustomColor.Red:
+                    Character.RedKeys--;
+                    break;
+                case CustomColor.Blue:
+                    Character.BlueKeys--;
+                    break;
+                case CustomColor.Green:
+                    Character.GreenKeys--;
+                    break;
+                default:
+                    break;
+            }
+
+            Character.CurrentStamina = Character.MaxStamina;
         }
     }
 }
