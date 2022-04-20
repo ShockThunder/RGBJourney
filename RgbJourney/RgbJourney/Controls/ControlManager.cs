@@ -3,7 +3,6 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System;
 using System.Collections.Generic;
-using System.Text;
 
 namespace RgbJourney.Controls
 {
@@ -34,12 +33,17 @@ namespace RgbJourney.Controls
             if (Count == 0)
                 return;
 
-            foreach(var control in this)
+            foreach (var control in this)
             {
                 if (control.Enabled)
                     control.Update(gameTime);
                 if (control.HasFocus)
                     control.HandleInput(playerIndex);
+
+                if (control.GetBounds().Contains(InputHandler.MouseAsVector2()))
+                {
+                    MouseControl(control);
+                }
             }
 
             if (InputHandler.KeyPressed(Keys.Up))
@@ -49,11 +53,33 @@ namespace RgbJourney.Controls
                 NextControl();
         }
 
+        private void MouseControl(Control control)
+        {
+            foreach (var c in this)
+                c.HasFocus = false;
+
+            control.HasFocus = true;
+
+            if (control.TabStop && control.Enabled)
+            {
+                _selectedControl = IndexOf(control);
+
+                if (FocusChanged != null)
+                    FocusChanged(control, EventArgs.Empty);
+                
+            }
+        }
+
         public void Draw(SpriteBatch spriteBatch)
         {
+
             foreach (var control in this)
+            {
                 if (control.Visible)
-                    control.Draw(spriteBatch);
+                {
+                    control.Draw(spriteBatch);                    
+                }
+            }
         }
 
         public void NextControl()
@@ -67,7 +93,9 @@ namespace RgbJourney.Controls
             do
             {
                 _selectedControl++;
-                if(_selectedControl == Count)
+
+                //Control cycling
+                if (_selectedControl == Count)
                     _selectedControl = 0;
 
                 if (this[_selectedControl].TabStop && this[_selectedControl].Enabled)
@@ -94,8 +122,10 @@ namespace RgbJourney.Controls
             do
             {
                 _selectedControl--;
-                if (_selectedControl == Count - 1)
-                    _selectedControl = 0;
+                
+                //Control cycling
+                if (_selectedControl < 0)
+                    _selectedControl = Count - 1;
 
                 if (this[_selectedControl].TabStop && this[_selectedControl].Enabled)
                 {

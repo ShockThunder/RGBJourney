@@ -2,9 +2,6 @@
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using RgbJourney.Enums;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace RgbJourney.Controls
 {
