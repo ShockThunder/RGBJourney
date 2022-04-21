@@ -8,7 +8,7 @@ namespace RgbJourney.Models
     public class Player
     {
         public Position Position { get; set; } = new Position();
-
+        public int Score { get; set; } = 0;
         private int _cellSize;
         private int _cellSpacing;
         private Texture2D _texture { get; set; }

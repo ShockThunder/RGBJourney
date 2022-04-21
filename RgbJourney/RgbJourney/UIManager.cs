@@ -14,6 +14,8 @@ namespace RgbJourney
         private Label _redValueLabel;
         private Label _blueValueLabel;
         private Label _greenValueLabel;
+        private Label _scoreLabel;
+        private Label _scoreValueLabel;
 
         private PictureBox _redKeyLabel;
         private PictureBox _blueKeyLabel;
@@ -39,7 +41,7 @@ namespace RgbJourney
             var colorsLabelPosition = new Vector2(800, 200);
             var keysValueLabelPosition = new Vector2(800, 250);
             var targetLabelPosition = new Vector2(800, 70);
-
+            var scoreLabelPosition = new Vector2(800, 300);
 
             _targetColorLabel = new Label();
             _targetColorLabel.Text = "Target Color";
@@ -109,6 +111,26 @@ namespace RgbJourney
             _greenValueLabel.Text = "G";
             _greenValueLabel.Position = new Vector2(keysValueLabelPosition.X + (squareSpace + 10f) * 2, keysValueLabelPosition.Y); ;
             ControlManager.Add(_greenValueLabel);
+
+            _scoreLabel = new Label();
+            _scoreLabel.Visible = true;
+            _scoreLabel.TabStop = false;
+            _scoreLabel.HasFocus = false;
+            _scoreLabel.Enabled = false;
+            _scoreLabel.Text = "Score:";
+            _scoreLabel.Position = new Vector2(scoreLabelPosition.X , scoreLabelPosition.Y); ;
+            ControlManager.Add(_scoreLabel);
+
+            _scoreValueLabel = new Label();
+            _scoreValueLabel.Visible = true;
+            _scoreValueLabel.TabStop = false;
+            _scoreValueLabel.HasFocus = false;
+            _scoreValueLabel.Enabled = false;
+            _scoreValueLabel.Text = "0";
+            _scoreValueLabel.Position = new Vector2(
+                scoreLabelPosition.X + _scoreLabel.SpriteFont.MeasureString(_scoreLabel.Text).X,
+                scoreLabelPosition.Y); ;
+            ControlManager.Add(_scoreValueLabel);
         }    
 
         public void Update(GameTime gameTime, Player player)
@@ -116,6 +138,7 @@ namespace RgbJourney
             _redValueLabel.Text = player.Character.RedKeys.ToString();
             _blueValueLabel.Text = player.Character.BlueKeys.ToString();
             _greenValueLabel.Text = player.Character.GreenKeys.ToString();
+            _scoreValueLabel.Text = player.Score.ToString();
             ControlManager.Update(gameTime, playerIndex);
         }
 

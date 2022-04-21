@@ -10,8 +10,6 @@ namespace RgbJourney.GameScreens
 {
     public class GamePlayScreen : BaseGameState
     {
-        public int Score { get; set; } = 0;
-
         private int _fieldSize = 15;
         private int _cellSize = 45;
         private int _cellSpacing = 2;
@@ -176,12 +174,14 @@ namespace RgbJourney.GameScreens
 
             //Для проверки можно вставить _selectedColor
             _player.OpenCell(playerCell.Color);
+            if (playerCell.Color == _selectedColor)
+                _player.Score += 100;
+
             _gameStep = GameStep.Fourth;
         }
 
         private void HandleFourthStep()
         {
-            Score += 100;
             _gameStep = GameStep.First;
         }
     }
