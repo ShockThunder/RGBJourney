@@ -8,7 +8,6 @@ namespace RgbJourney.Models
     public class Player
     {
         public Position Position { get; set; } = new Position();
-        public int Score { get; set; } = 0;
         private int _cellSize;
         private int _cellSpacing;
         private Texture2D _texture { get; set; }
@@ -86,23 +85,8 @@ namespace RgbJourney.Models
             }                
         }
 
-        public void OpenCell(CustomColor color)
+        public void RefreshStamina()
         {
-            switch (color)
-            {
-                case CustomColor.Red:
-                    Character.RedKeys--;
-                    break;
-                case CustomColor.Blue:
-                    Character.BlueKeys--;
-                    break;
-                case CustomColor.Green:
-                    Character.GreenKeys--;
-                    break;
-                default:
-                    break;
-            }
-
             Character.CurrentStamina = Character.MaxStamina;
         }
     }

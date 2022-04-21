@@ -1,5 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input;
 using RgbJourney.Controls;
 using RgbJourney.Enums;
 using RgbJourney.Models;
@@ -14,6 +16,7 @@ namespace RgbJourney.GameScreens
         private int _cellSize = 45;
         private int _cellSpacing = 2;
         private CustomColor _selectedColor;
+        private CustomColor _currentColor;
         private GameStep _gameStep;
         private GameStepManager _gameStepManager = new GameStepManager(new Random());
         private UIManager _uiManager;
@@ -29,6 +32,7 @@ namespace RgbJourney.GameScreens
         private PictureBox blueTargetColor { get; set; }
         private PictureBox greenTargetColor { get; set; }
 
+        public int Score { get; set; } = 0;
 
         public GamePlayScreen(Game game, GameStateManager stateManager) : base(game, stateManager)
         {
@@ -38,10 +42,10 @@ namespace RgbJourney.GameScreens
         protected override void LoadContent()
         {
             var content = Game.Content;
-            
+
             base.LoadContent();
-            
-            backgroundImage = content.Load<Texture2D>("BackTexture");           
+
+            backgroundImage = content.Load<Texture2D>("BackTexture");
 
             playerTexture = content.Load<Texture2D>("Player");
 
@@ -50,32 +54,10 @@ namespace RgbJourney.GameScreens
             _uiManager = new UIManager(GameRef);
             _gameStep = GameStep.First;
 
-            var targetPosition = new Vector2(800, 100);
-
-            redTargetColor = new PictureBox(content.Load<Texture2D>("Red2"), new Rectangle(0, 0, _cellSize, _cellSize), new Rectangle(0, 0, _cellSize, _cellSize));
-            redTargetColor.Enabled = false;
-            redTargetColor.Visible = false;
-            redTargetColor.HasFocus = false;
-            redTargetColor.TabStop = false;
-            redTargetColor.SetPosition(targetPosition);
-            ControlManager.Add(redTargetColor);
-
-            blueTargetColor = new PictureBox(content.Load<Texture2D>("Blue2"), new Rectangle(0, 0, _cellSize, _cellSize), new Rectangle(0, 0, _cellSize, _cellSize));
-            blueTargetColor.Enabled = false;
-            blueTargetColor.Visible = false;
-            blueTargetColor.HasFocus = false;
-            blueTargetColor.TabStop = false;
-            blueTargetColor.SetPosition(targetPosition);
-            ControlManager.Add(blueTargetColor);
-
-            greenTargetColor = new PictureBox(content.Load<Texture2D>("Green2"), new Rectangle(0, 0, _cellSize, _cellSize), new Rectangle(0, 0, _cellSize, _cellSize));
-            greenTargetColor.Enabled = false;
-            greenTargetColor.Visible = false;
-            greenTargetColor.HasFocus = false;
-            greenTargetColor.TabStop = false;
-            greenTargetColor.SetPosition(targetPosition);
-            ControlManager.Add(greenTargetColor);
+            LoadTargetColorUI(content);
         }
+
+        
 
         public override void Initialize()
         {
@@ -103,7 +85,7 @@ namespace RgbJourney.GameScreens
         {
             base.Update(gameTime);
             _player.Update(gameTime);
-            _uiManager.Update(gameTime, _player);
+            _uiManager.Update(gameTime, _player, Score);
             HandleGame();
         }
 
@@ -163,26 +145,90 @@ namespace RgbJourney.GameScreens
         private void HandleSecondStep()
         {
             if (_player.Character.CurrentStamina == 0)
+            {
+                var playerCell = _field.Cells.First(x =>
+                x.Position.FieldX == _player.Position.FieldX
+                && x.Position.FieldY == _player.Position.FieldY);
+                _currentColor = playerCell.Color;
                 _gameStep = GameStep.Third;
+            }
+
         }
 
         private void HandleThirdStep()
         {
-            var playerCell = _field.Cells.First(x => 
-                x.Position.FieldX == _player.Position.FieldX 
-                && x.Position.FieldY == _player.Position.FieldY);
-
-            //Для проверки можно вставить _selectedColor
-            _player.OpenCell(playerCell.Color);
-            if (playerCell.Color == _selectedColor)
-                _player.Score += 100;
-
-            _gameStep = GameStep.Fourth;
+            HandleInput();
+            if (_player.Character.CurrentStamina == _player.Character.MaxStamina)
+                _gameStep = GameStep.Fourth;
         }
 
         private void HandleFourthStep()
         {
             _gameStep = GameStep.First;
+        }
+
+        private void LoadTargetColorUI(ContentManager content)
+        {
+            var targetPosition = new Vector2(800, 100);
+
+            redTargetColor = new PictureBox(content.Load<Texture2D>("Red2"), new Rectangle(0, 0, _cellSize, _cellSize), new Rectangle(0, 0, _cellSize, _cellSize))
+            {
+                Enabled = false,
+                Visible = false,
+                HasFocus = false,
+                TabStop = false
+            };
+            redTargetColor.SetPosition(targetPosition);
+            ControlManager.Add(redTargetColor);
+
+            blueTargetColor = new PictureBox(content.Load<Texture2D>("Blue2"), new Rectangle(0, 0, _cellSize, _cellSize), new Rectangle(0, 0, _cellSize, _cellSize))
+            {
+                Enabled = false,
+                Visible = false,
+                HasFocus = false,
+                TabStop = false,
+            };
+            blueTargetColor.SetPosition(targetPosition);
+            ControlManager.Add(blueTargetColor);
+
+            greenTargetColor = new PictureBox(content.Load<Texture2D>("Green2"), new Rectangle(0, 0, _cellSize, _cellSize), new Rectangle(0, 0, _cellSize, _cellSize))
+            {
+                Enabled = false,
+                Visible = false,
+                HasFocus = false,
+                TabStop = false,
+            };
+            greenTargetColor.SetPosition(targetPosition);
+            ControlManager.Add(greenTargetColor);
+        }
+
+        private void HandleInput()
+        {
+            if (InputHandler.KeyPressed(Keys.O))
+                OpenCell();
+        }
+
+        private void OpenCell()
+        {
+            switch (_currentColor)
+            {
+                case CustomColor.Red:
+                    _player.Character.RedKeys--;
+                    break;
+                case CustomColor.Blue:
+                    _player.Character.BlueKeys--;
+                    break;
+                case CustomColor.Green:
+                    _player.Character.GreenKeys--;
+                    break;
+                default:
+                    break;
+            }
+
+            if (_currentColor == _selectedColor)
+                Score += 100;
+
+            _player.RefreshStamina();
         }
     }
 }

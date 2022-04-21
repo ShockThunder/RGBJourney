@@ -43,102 +43,123 @@ namespace RgbJourney
             var targetLabelPosition = new Vector2(800, 70);
             var scoreLabelPosition = new Vector2(800, 300);
 
-            _targetColorLabel = new Label();
-            _targetColorLabel.Text = "Target Color";
-            _targetColorLabel.Visible = true;
-            _targetColorLabel.TabStop = false;
-            _targetColorLabel.HasFocus = false;
-            _targetColorLabel.Enabled = false;
-            _targetColorLabel.Position = targetLabelPosition;
+            _targetColorLabel = new Label
+            {
+                Text = "Target Color",
+                Visible = true,
+                TabStop = false,
+                HasFocus = false,
+                Enabled = false,
+                Position = targetLabelPosition
+            };
             ControlManager.Add(_targetColorLabel);
 
-            _keysLabel = new Label();
-            _keysLabel.Text = "Remained Keys";
-            _keysLabel.Visible = true;
-            _keysLabel.TabStop = false;
-            _keysLabel.HasFocus = false;
-            _keysLabel.Enabled = false;
-            _keysLabel.Position = keysLabelPosition;
+            _keysLabel = new Label
+            {
+                Text = "Remained Keys",
+                Visible = true,
+                TabStop = false,
+                HasFocus = false,
+                Enabled = false,
+                Position = keysLabelPosition
+            };
             ControlManager.Add(_keysLabel);
 
-            _redKeyLabel = new PictureBox(Content.Load<Texture2D>("Red2"), new Rectangle(0, 0, squareSpace, squareSpace), new Rectangle(0, 0, squareSpace, squareSpace));
-            _redKeyLabel.Enabled = false;
-            _redKeyLabel.Visible = true;
-            _redKeyLabel.HasFocus = false;
-            _redKeyLabel.TabStop = false;
+            _redKeyLabel = new PictureBox(Content.Load<Texture2D>("Red2"), new Rectangle(0, 0, squareSpace, squareSpace), new Rectangle(0, 0, squareSpace, squareSpace))
+            {
+                Enabled = false,
+                Visible = true,
+                HasFocus = false,
+                TabStop = false,
+            };
             _redKeyLabel.SetPosition(colorsLabelPosition);
             ControlManager.Add(_redKeyLabel);
 
-            _blueKeyLabel = new PictureBox(Content.Load<Texture2D>("Blue2"), new Rectangle(0, 0, squareSpace, squareSpace), new Rectangle(0, 0, squareSpace, squareSpace));
-            _blueKeyLabel.Enabled = false;
-            _blueKeyLabel.Visible = true;
-            _blueKeyLabel.HasFocus = false;
-            _blueKeyLabel.TabStop = false;
+            _blueKeyLabel = new PictureBox(Content.Load<Texture2D>("Blue2"), new Rectangle(0, 0, squareSpace, squareSpace), new Rectangle(0, 0, squareSpace, squareSpace))
+            {
+                Enabled = false,
+                Visible = true,
+                HasFocus = false,
+                TabStop = false
+            };
             _blueKeyLabel.SetPosition(new Vector2(colorsLabelPosition.X + squareSpace + 10f, colorsLabelPosition.Y));
+
             ControlManager.Add(_blueKeyLabel);
 
-            _greenKeyLabel = new PictureBox(Content.Load<Texture2D>("Green2"), new Rectangle(0, 0, squareSpace, squareSpace), new Rectangle(0, 0, squareSpace, squareSpace));
-            _greenKeyLabel.Enabled = false;
-            _greenKeyLabel.Visible = true;
-            _greenKeyLabel.HasFocus = false;
-            _greenKeyLabel.TabStop = false;
+            _greenKeyLabel = new PictureBox(Content.Load<Texture2D>("Green2"), new Rectangle(0, 0, squareSpace, squareSpace), new Rectangle(0, 0, squareSpace, squareSpace))
+            {
+                Enabled = false,
+                Visible = true,
+                HasFocus = false,
+                TabStop = false
+            };
             _greenKeyLabel.SetPosition(new Vector2(colorsLabelPosition.X + (squareSpace + 10f) * 2, colorsLabelPosition.Y));
             ControlManager.Add(_greenKeyLabel);
 
-            _redValueLabel = new Label();
-            _redValueLabel.Visible = true;
-            _redValueLabel.TabStop = false;
-            _redValueLabel.HasFocus = false;
-            _redValueLabel.Enabled = false;
-            _redValueLabel.Text = "R";
-            _redValueLabel.Position = keysValueLabelPosition;
+            _redValueLabel = new Label
+            {
+                Visible = true,
+                TabStop = false,
+                HasFocus = false,
+                Enabled = false,
+                Text = "R",
+                Position = keysValueLabelPosition
+            };
             ControlManager.Add(_redValueLabel);
 
-            _blueValueLabel = new Label();
-            _blueValueLabel.Visible = true;
-            _blueValueLabel.TabStop = false;
-            _blueValueLabel.HasFocus = false;
-            _blueValueLabel.Enabled = false;
-            _blueValueLabel.Text = "B";
-            _blueValueLabel.Position = new Vector2(keysValueLabelPosition.X + squareSpace + 10f, keysValueLabelPosition.Y);
+            _blueValueLabel = new Label
+            {
+                Visible = true,
+                TabStop = false,
+                HasFocus = false,
+                Enabled = false,
+                Text = "B",
+                Position = new Vector2(keysValueLabelPosition.X + squareSpace + 10f, keysValueLabelPosition.Y)
+            };
             ControlManager.Add(_blueValueLabel);
 
-            _greenValueLabel = new Label();
-            _greenValueLabel.Visible = true;
-            _greenValueLabel.TabStop = false;
-            _greenValueLabel.HasFocus = false;
-            _greenValueLabel.Enabled = false;
-            _greenValueLabel.Text = "G";
-            _greenValueLabel.Position = new Vector2(keysValueLabelPosition.X + (squareSpace + 10f) * 2, keysValueLabelPosition.Y); ;
+            _greenValueLabel = new Label
+            {
+                Visible = true,
+                TabStop = false,
+                HasFocus = false,
+                Enabled = false,
+                Text = "G",
+                Position = new Vector2(keysValueLabelPosition.X + (squareSpace + 10f) * 2, keysValueLabelPosition.Y)
+            };            
             ControlManager.Add(_greenValueLabel);
 
-            _scoreLabel = new Label();
-            _scoreLabel.Visible = true;
-            _scoreLabel.TabStop = false;
-            _scoreLabel.HasFocus = false;
-            _scoreLabel.Enabled = false;
-            _scoreLabel.Text = "Score:";
-            _scoreLabel.Position = new Vector2(scoreLabelPosition.X , scoreLabelPosition.Y); ;
+            _scoreLabel = new Label
+            {
+                Visible = true,
+                TabStop = false,
+                HasFocus = false,
+                Enabled = false,
+                Text = "Score:",
+                Position = new Vector2(scoreLabelPosition.X, scoreLabelPosition.Y)
+            };            
             ControlManager.Add(_scoreLabel);
 
-            _scoreValueLabel = new Label();
-            _scoreValueLabel.Visible = true;
-            _scoreValueLabel.TabStop = false;
-            _scoreValueLabel.HasFocus = false;
-            _scoreValueLabel.Enabled = false;
-            _scoreValueLabel.Text = "0";
-            _scoreValueLabel.Position = new Vector2(
+            _scoreValueLabel = new Label
+            {
+                Visible = true,
+                TabStop = false,
+                HasFocus = false,
+                Enabled = false,
+                Text = "0",
+                Position = new Vector2(
                 scoreLabelPosition.X + _scoreLabel.SpriteFont.MeasureString(_scoreLabel.Text).X,
-                scoreLabelPosition.Y); ;
+                scoreLabelPosition.Y)
+            };        
             ControlManager.Add(_scoreValueLabel);
         }    
 
-        public void Update(GameTime gameTime, Player player)
+        public void Update(GameTime gameTime, Player player, int Score)
         {
             _redValueLabel.Text = player.Character.RedKeys.ToString();
             _blueValueLabel.Text = player.Character.BlueKeys.ToString();
             _greenValueLabel.Text = player.Character.GreenKeys.ToString();
-            _scoreValueLabel.Text = player.Score.ToString();
+            _scoreValueLabel.Text = Score.ToString();
             ControlManager.Update(gameTime, playerIndex);
         }
 
