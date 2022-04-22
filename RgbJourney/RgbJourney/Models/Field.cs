@@ -45,6 +45,7 @@ namespace RgbJourney.Models
             var cellSize = CellSize;
 
             var defaultRect = new Rectangle(0, 0, cellSize, cellSize);
+            var smallRect = new Rectangle(0,0, cellSize/2, cellSize/2);
 
             foreach (var cell in Cells)
             {
@@ -63,6 +64,13 @@ namespace RgbJourney.Models
                     case CustomColor.Green:
                         spriteBatch.Draw(greenTexture, rect, Color.White);
                         break;
+                }
+
+                if(cell.IsOpened && cell.CellType == CellType.Treasure)
+                {
+                    smallRect.X = cell.Position.X + cellSize / 4;
+                    smallRect.Y = cell.Position.Y + cellSize / 4;
+                    spriteBatch.Draw(whiteTexture, smallRect, Color.White);
                 }
             }
 
@@ -125,6 +133,8 @@ namespace RgbJourney.Models
                 Y = j * (CellSize + CellSpacing)
             },
             Color = color,
+            IsOpened = false,
+            CellType = random.Next(5) == 3 ? CellType.Treasure : CellType.Empty
         };
     }
 }

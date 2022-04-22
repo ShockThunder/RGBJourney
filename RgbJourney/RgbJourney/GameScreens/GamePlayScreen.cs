@@ -146,13 +146,7 @@ namespace RgbJourney.GameScreens
         private void HandleSecondStep()
         {
             if (_player.Character.CurrentStamina == 0)
-            {
-                var playerCell = _field.Cells.First(x =>
-                x.Position.FieldX == _player.Position.FieldX
-                && x.Position.FieldY == _player.Position.FieldY);
-                _currentColor = playerCell.Color;
                 _gameStep = GameStep.Third;
-            }
 
         }
 
@@ -214,6 +208,12 @@ namespace RgbJourney.GameScreens
 
         private void OpenCell()
         {
+            var playerCell = _field.Cells.First(x =>
+                x.Position.FieldX == _player.Position.FieldX
+                && x.Position.FieldY == _player.Position.FieldY);
+
+            _currentColor = playerCell.Color;
+
             switch (_currentColor)
             {
                 case CustomColor.Red:
@@ -253,6 +253,10 @@ namespace RgbJourney.GameScreens
             if (_currentColor == _selectedColor)
                 Score += 100;
 
+            if (!playerCell.IsOpened && playerCell.CellType == CellType.Treasure)
+                Score += 300;
+
+            playerCell.IsOpened = true;
             _player.RefreshStamina();
         }
 

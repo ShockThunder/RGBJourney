@@ -9,5 +9,7 @@ namespace RgbJourney.Models
     {
         public Position Position { get; set; } = new Position();
         public CustomColor Color { get; set; }
+        public bool IsOpened { get; set; }
+        public CellType CellType { get; set; }
     }
 }
