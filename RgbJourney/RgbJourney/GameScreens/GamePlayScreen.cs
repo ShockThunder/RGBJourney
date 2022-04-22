@@ -166,10 +166,8 @@ namespace RgbJourney.GameScreens
         private void HandleFourthStep()
         {
             if (Score < 0)
-            {
-                StateManager.PushState(GameRef.LoseGameScreen);
-                GameRef.LoseGameScreen.SetLoseInformation(Score);
-            }
+                LoseGame();
+
             _gameStep = GameStep.First;
         }
 
@@ -243,6 +241,11 @@ namespace RgbJourney.GameScreens
                             Score -= 200;
                     }
                     break;
+                case CustomColor.White:
+                    {
+                        WinGame();
+                    }
+                    break;
                 default:
                     break;
             }
@@ -251,6 +254,18 @@ namespace RgbJourney.GameScreens
                 Score += 100;
 
             _player.RefreshStamina();
+        }
+
+        private void LoseGame()
+        {
+            StateManager.PushState(GameRef.LoseGameScreen);
+            GameRef.LoseGameScreen.SetLoseInformation(Score);
+        }
+
+        private void WinGame()
+        {
+            StateManager.PushState(GameRef.WinGameScreen);
+            GameRef.WinGameScreen.SetWinInformation(Score);
         }
 
         public void ResetGame()
