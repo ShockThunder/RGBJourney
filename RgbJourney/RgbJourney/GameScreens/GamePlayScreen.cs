@@ -20,7 +20,7 @@ namespace RgbJourney.GameScreens
         private GameStep _gameStep;
         private GameStepManager _gameStepManager = new GameStepManager(new Random());
         private UIManager _uiManager;
-        
+
 
         Field _field;
         Player _player;
@@ -32,11 +32,11 @@ namespace RgbJourney.GameScreens
         private PictureBox blueTargetColor { get; set; }
         private PictureBox greenTargetColor { get; set; }
 
-        public int Score { get; set; } = 0;
+        public int Score { get; set; }
 
         public GamePlayScreen(Game game, GameStateManager stateManager) : base(game, stateManager)
         {
-           
+
         }
 
         protected override void LoadContent()
@@ -45,6 +45,7 @@ namespace RgbJourney.GameScreens
 
             base.LoadContent();
 
+            Score = 0;
             backgroundImage = content.Load<Texture2D>("BackTexture");
 
             playerTexture = content.Load<Texture2D>("Player");
@@ -57,7 +58,7 @@ namespace RgbJourney.GameScreens
             LoadTargetColorUI(content);
         }
 
-        
+
 
         public override void Initialize()
         {
@@ -164,6 +165,11 @@ namespace RgbJourney.GameScreens
 
         private void HandleFourthStep()
         {
+            if (Score < 0)
+            {
+                StateManager.PushState(GameRef.LoseGameScreen);
+                GameRef.LoseGameScreen.SetLoseInformation(Score);
+            }
             _gameStep = GameStep.First;
         }
 
@@ -213,13 +219,29 @@ namespace RgbJourney.GameScreens
             switch (_currentColor)
             {
                 case CustomColor.Red:
-                    _player.Character.RedKeys--;
+                    {
+                        if (_player.Character.RedKeys > 0)
+                            _player.Character.RedKeys--;
+                        else
+                            Score -= 200;
+
+                    }
                     break;
                 case CustomColor.Blue:
-                    _player.Character.BlueKeys--;
+                    {
+                        if (_player.Character.BlueKeys > 0)
+                            _player.Character.BlueKeys--;
+                        else
+                            Score -= 200;
+                    }
                     break;
                 case CustomColor.Green:
-                    _player.Character.GreenKeys--;
+                    {
+                        if (_player.Character.GreenKeys > 0)
+                            _player.Character.GreenKeys--;
+                        else
+                            Score -= 200;
+                    }
                     break;
                 default:
                     break;
@@ -229,6 +251,11 @@ namespace RgbJourney.GameScreens
                 Score += 100;
 
             _player.RefreshStamina();
+        }
+
+        public void ResetGame()
+        {
+            LoadContent();
         }
     }
 }

@@ -23,6 +23,7 @@ namespace RgbJourney
         public TitleScreen TitleScreen { get; private set; }
         public StartMenuScreen StartMenuScreen { get; private set; }
         public GamePlayScreen GamePlayScreen { get; private set; }
+        public LoseGameScreen LoseGameScreen { get; private set; }
         #endregion
 
         public const int ScreenWidth = 1200;
@@ -47,6 +48,7 @@ namespace RgbJourney
             TitleScreen = new TitleScreen(this, _gameStateManager);
             StartMenuScreen = new StartMenuScreen(this, _gameStateManager);
             GamePlayScreen = new GamePlayScreen(this, _gameStateManager);
+            LoseGameScreen = new LoseGameScreen(this, _gameStateManager);
             _gameStateManager.ChangeState(TitleScreen);
         }
 
