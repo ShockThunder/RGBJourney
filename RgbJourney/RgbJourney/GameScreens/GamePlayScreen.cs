@@ -12,31 +12,33 @@ namespace RgbJourney.GameScreens
 {
     public class GamePlayScreen : BaseGameState
     {
-        private int _fieldSize = 15;
-        private int _cellSize = 45;
-        private int _cellSpacing = 2;
+        private const int FIELD_SIZE = 15;
+        private const int CELL_SIZE = 45;
+        private const int CELL_SPACING = 2;
         private CustomColor _selectedColor;
         private CustomColor _currentColor;
         private GameStep _gameStep;
-        private GameStepManager _gameStepManager = new GameStepManager(new Random());
+        private readonly Random _random;
+        private readonly GameStepManager _gameStepManager;
         private UIManager _uiManager;
 
 
-        Field _field;
-        Player _player;
+        private Field _field;
+        private Player _player;
 
-        private Texture2D backgroundImage;
-        private Texture2D playerTexture;
+        private Texture2D _backgroundImage;
+        private Texture2D _playerTexture;
 
-        private PictureBox redTargetColor { get; set; }
-        private PictureBox blueTargetColor { get; set; }
-        private PictureBox greenTargetColor { get; set; }
+        private PictureBox RedTargetColor { get; set; }
+        private PictureBox BlueTargetColor { get; set; }
+        private PictureBox GreenTargetColor { get; set; }
 
         public int Score { get; set; }
 
         public GamePlayScreen(Game game, GameStateManager stateManager) : base(game, stateManager)
         {
-
+            _random = new Random();
+            _gameStepManager = new GameStepManager(_random);
         }
 
         protected override void LoadContent()
@@ -46,12 +48,12 @@ namespace RgbJourney.GameScreens
             base.LoadContent();
 
             Score = 0;
-            backgroundImage = content.Load<Texture2D>("BackTexture");
+            _backgroundImage = content.Load<Texture2D>("BackTexture");
 
-            playerTexture = content.Load<Texture2D>("Player");
+            _playerTexture = content.Load<Texture2D>("Player");
 
-            _player = new Player(_cellSize, _cellSpacing, _fieldSize, playerTexture);
-            _field = new Field(_cellSize, _cellSpacing, _fieldSize, GameRef.Content);
+            _player = new Player(CELL_SIZE, CELL_SPACING, FIELD_SIZE, _playerTexture);
+            _field = new Field(CELL_SIZE, CELL_SPACING, FIELD_SIZE, GameRef.Content);
             _uiManager = new UIManager(GameRef);
             _gameStep = GameStep.First;
 
@@ -71,7 +73,7 @@ namespace RgbJourney.GameScreens
             base.Draw(gameTime);
 
             GameRef.SpriteBatch.Draw(
-               backgroundImage,
+               _backgroundImage,
                GameRef.ScreenRectangle,
                Color.White);
 
@@ -92,6 +94,9 @@ namespace RgbJourney.GameScreens
 
         private void HandleGame()
         {
+            if(_player.Character.CurrentHealth <= 0)
+                LoseGame();
+            
             switch (_gameStep)
             {
                 case GameStep.First:
@@ -118,23 +123,23 @@ namespace RgbJourney.GameScreens
             {
                 case CustomColor.Red:
                     {
-                        redTargetColor.Visible = true;
-                        blueTargetColor.Visible = false;
-                        greenTargetColor.Visible = false;
+                        RedTargetColor.Visible = true;
+                        BlueTargetColor.Visible = false;
+                        GreenTargetColor.Visible = false;
                     }
                     break;
                 case CustomColor.Blue:
                     {
-                        redTargetColor.Visible = false;
-                        blueTargetColor.Visible = true;
-                        greenTargetColor.Visible = false;
+                        RedTargetColor.Visible = false;
+                        BlueTargetColor.Visible = true;
+                        GreenTargetColor.Visible = false;
                     }
                     break;
                 case CustomColor.Green:
                     {
-                        redTargetColor.Visible = false;
-                        blueTargetColor.Visible = false;
-                        greenTargetColor.Visible = true;
+                        RedTargetColor.Visible = false;
+                        BlueTargetColor.Visible = false;
+                        GreenTargetColor.Visible = true;
                     }
                     break;
                 default:
@@ -169,35 +174,35 @@ namespace RgbJourney.GameScreens
         {
             var targetPosition = new Vector2(800, 100);
 
-            redTargetColor = new PictureBox(content.Load<Texture2D>("Red2"), new Rectangle(0, 0, _cellSize, _cellSize), new Rectangle(0, 0, _cellSize, _cellSize))
+            RedTargetColor = new PictureBox(content.Load<Texture2D>("Red2"), new Rectangle(0, 0, CELL_SIZE, CELL_SIZE), new Rectangle(0, 0, CELL_SIZE, CELL_SIZE))
             {
                 Enabled = false,
                 Visible = false,
                 HasFocus = false,
                 TabStop = false
             };
-            redTargetColor.SetPosition(targetPosition);
-            ControlManager.Add(redTargetColor);
+            RedTargetColor.SetPosition(targetPosition);
+            ControlManager.Add(RedTargetColor);
 
-            blueTargetColor = new PictureBox(content.Load<Texture2D>("Blue2"), new Rectangle(0, 0, _cellSize, _cellSize), new Rectangle(0, 0, _cellSize, _cellSize))
+            BlueTargetColor = new PictureBox(content.Load<Texture2D>("Blue2"), new Rectangle(0, 0, CELL_SIZE, CELL_SIZE), new Rectangle(0, 0, CELL_SIZE, CELL_SIZE))
             {
                 Enabled = false,
                 Visible = false,
                 HasFocus = false,
                 TabStop = false,
             };
-            blueTargetColor.SetPosition(targetPosition);
-            ControlManager.Add(blueTargetColor);
+            BlueTargetColor.SetPosition(targetPosition);
+            ControlManager.Add(BlueTargetColor);
 
-            greenTargetColor = new PictureBox(content.Load<Texture2D>("Green2"), new Rectangle(0, 0, _cellSize, _cellSize), new Rectangle(0, 0, _cellSize, _cellSize))
+            GreenTargetColor = new PictureBox(content.Load<Texture2D>("Green2"), new Rectangle(0, 0, CELL_SIZE, CELL_SIZE), new Rectangle(0, 0, CELL_SIZE, CELL_SIZE))
             {
                 Enabled = false,
                 Visible = false,
                 HasFocus = false,
                 TabStop = false,
             };
-            greenTargetColor.SetPosition(targetPosition);
-            ControlManager.Add(greenTargetColor);
+            GreenTargetColor.SetPosition(targetPosition);
+            ControlManager.Add(GreenTargetColor);
         }
 
         private void HandleInput()
@@ -252,12 +257,25 @@ namespace RgbJourney.GameScreens
 
             if (_currentColor == _selectedColor)
                 Score += 100;
+            else
+            {
+                HandleNonTargetColor();
+            }
 
             if (!playerCell.IsOpened && playerCell.CellType == CellType.Treasure)
                 Score += 300;
 
             playerCell.IsOpened = true;
             _player.RefreshStamina();
+        }
+
+        private void HandleNonTargetColor()
+        {
+            var isDamaged = _random.Next(5) == 2;
+            if (isDamaged)
+            {
+                _player.Character.CurrentHealth--;
+            }
         }
 
         private void LoseGame()

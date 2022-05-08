@@ -10,6 +10,7 @@ namespace RgbJourney.Models
         public Position Position { get; set; } = new Position();
         private int _cellSize;
         private int _cellSpacing;
+        private int _fieldSize;
         private Texture2D _texture { get; set; }
 
         public Character Character { get; set; }
@@ -25,7 +26,8 @@ namespace RgbJourney.Models
 
             _texture = texture;
 
-            Character = new Character(4);
+            Character = new Character(4, 10);
+            _fieldSize = fieldSize;
         }
 
         public void Draw(SpriteBatch spriteBatch)
@@ -46,48 +48,62 @@ namespace RgbJourney.Models
                 MoveRight();
         }
 
-        public void MoveRight()
+        private void MoveRight()
         {
-            if(Character.CurrentStamina > 0)
-            {
-                Position.X = Position.X + _cellSize + _cellSpacing;
-                Position.FieldX += 1;
-                Character.CurrentStamina--;
-            }
+            if (Character.CurrentStamina <= 0)
+                return;
+            
+            if (Position.FieldX >= _fieldSize)
+                return;
+            
+            Position.X += _cellSize + _cellSpacing;
+            Position.FieldX += 1;
+            Character.CurrentStamina--;
         }
 
-        public void MoveLeft()
+        private void MoveLeft()
         {
-            if (Character.CurrentStamina > 0)
-            {
-                Position.X = Position.X - (_cellSize + _cellSpacing);
-                Position.FieldX -= 1;
-                Character.CurrentStamina--;
-            }                
+            if (Character.CurrentStamina <= 0)
+                return;
+            if (Position.FieldX < 0)
+                return;
+            Position.X -= _cellSize + _cellSpacing;
+            Position.FieldX -= 1;
+            Character.CurrentStamina--;
         }
 
-        public void MoveUp()
+        private void MoveUp()
         {
-            if (Character.CurrentStamina > 0)
-            {
-                Position.Y = Position.Y - (_cellSize + _cellSpacing);
-                Position.FieldY -= 1;
-                Character.CurrentStamina--;
-            }                
+            if (Character.CurrentStamina <= 0)
+                return;
+            if(Position.FieldY < 0)
+                return;
+            
+            Position.Y -= _cellSize + _cellSpacing;
+            Position.FieldY -= 1;
+            Character.CurrentStamina--;
         }
-        public void MoveDown()
+
+        private void MoveDown()
         {
-            if (Character.CurrentStamina > 0)
-            {
-                Position.Y = Position.Y + _cellSize + _cellSpacing;
-                Position.FieldY += 1;
-                Character.CurrentStamina--;
-            }                
+            if (Character.CurrentStamina <= 0)
+                return;
+            if(Position.FieldY >= _fieldSize)
+                return;
+            
+            Position.Y = Position.Y + _cellSize + _cellSpacing;
+            Position.FieldY += 1;
+            Character.CurrentStamina--;
         }
 
         public void RefreshStamina()
         {
             Character.CurrentStamina = Character.MaxStamina;
+        }       
+        
+        public void RefreshHealth()
+        {
+            Character.CurrentHealth = Character.MaxHealth;
         }
     }
 }

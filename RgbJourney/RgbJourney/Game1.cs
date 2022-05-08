@@ -11,12 +11,8 @@ namespace RgbJourney
     public class Game1 : Game
     {
         //Alpha-2 refactor
-        private FieldGenerator _fieldGenerator;
-        private Random _random = new Random();
-        private Field _field;
         
         private GraphicsDeviceManager _graphics;
-        private GameStepManager _gameStepManager;
         public SpriteBatch SpriteBatch { get; set; }
 
         #region Game Screens
@@ -27,11 +23,11 @@ namespace RgbJourney
         public WinGameScreen WinGameScreen { get; private set; }
         #endregion
 
-        public const int ScreenWidth = 1200;
-        public const int ScreenHeight = 700;
+        private const int SCREEN_WIDTH = 1200;
+        private const int SCREEN_HEIGHT = 700;
 
         public readonly Rectangle ScreenRectangle = new Rectangle(
-            0, 0, ScreenWidth, ScreenHeight);
+            0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
         
 
         private GameStateManager _gameStateManager;
@@ -57,8 +53,8 @@ namespace RgbJourney
         protected override void Initialize()
         {
             // TODO: Add your initialization logic here
-            _graphics.PreferredBackBufferWidth = ScreenWidth;
-            _graphics.PreferredBackBufferHeight = ScreenHeight;
+            _graphics.PreferredBackBufferWidth = SCREEN_WIDTH;
+            _graphics.PreferredBackBufferHeight = SCREEN_HEIGHT;
             _graphics.ApplyChanges();
 
             base.Initialize();
