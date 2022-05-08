@@ -150,7 +150,7 @@ namespace RgbJourney.GameScreens
 
         private void HandleSecondStep()
         {
-            if (_player.Character.CurrentStamina == 0)
+            //if (_player.Character.CurrentStamina == 0)
                 _gameStep = GameStep.Third;
 
         }
@@ -158,8 +158,7 @@ namespace RgbJourney.GameScreens
         private void HandleThirdStep()
         {
             HandleInput();
-            if (_player.Character.CurrentStamina == _player.Character.MaxStamina)
-                _gameStep = GameStep.Fourth;
+            //Step moving in OpenCell
         }
 
         private void HandleFourthStep()
@@ -267,6 +266,8 @@ namespace RgbJourney.GameScreens
 
             playerCell.IsOpened = true;
             _player.RefreshStamina();
+
+            _gameStep = GameStep.Fourth;
         }
 
         private void HandleNonTargetColor()
