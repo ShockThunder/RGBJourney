@@ -10,6 +10,11 @@
         /// <summary>
         /// Decrease stamina
         /// </summary>
-        Exhaust
+        Exhaust,
+        
+        /// <summary>
+        /// Decrease next earned points
+        /// </summary>
+        Weakness
     }
 }

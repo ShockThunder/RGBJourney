@@ -272,10 +272,24 @@ namespace RgbJourney.GameScreens
 
         private void HandleNonTargetColor()
         {
-            var isDamaged = _random.Next(5) == 2;
-            if (isDamaged)
+            var isDebuff = _random.Next(5) == 2;
+            if(!isDebuff)
+                return;
+            
+            var debuffType = (Debuff)_random.Next(2);
+            switch (debuffType)
             {
-                _player.Character.CurrentHealth--;
+                case Debuff.Damage:
+                    _player.Character.CurrentHealth--;
+                    break;
+                case Debuff.Exhaust:
+                    _player.Character.CurrentStamina--;
+                    break;
+                case Debuff.Weakness:
+                    Score -= 100;
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
             }
         }
 
