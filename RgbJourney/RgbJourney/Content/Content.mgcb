@@ -195,10 +195,3 @@
 /processorParam:TextureFormat=Color
 /build:WinCell.png
 
-#begin WinFont.spritefont
-/importer:FontDescriptionImporter
-/processor:FontDescriptionProcessor
-/processorParam:PremultiplyAlpha=True
-/processorParam:TextureFormat=Compressed
-/build:WinFont.spritefont
-
