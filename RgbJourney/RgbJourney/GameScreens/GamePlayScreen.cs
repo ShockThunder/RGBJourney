@@ -16,7 +16,8 @@ namespace RgbJourney.GameScreens
         private const int CELL_SIZE = 45;
         private const int CELL_SPACING = 2;
         private CustomColor _selectedColor;
-        private CustomColor _currentColor;
+        private CustomColor _currentCellColor;
+        private CustomColor _nextColor;
         private GameStep _gameStep;
         private readonly Random _random;
         private readonly GameStepManager _gameStepManager;
@@ -32,6 +33,10 @@ namespace RgbJourney.GameScreens
         private PictureBox RedTargetColor { get; set; }
         private PictureBox BlueTargetColor { get; set; }
         private PictureBox GreenTargetColor { get; set; }
+        
+        private PictureBox RedNextTargetColor { get; set; }
+        private PictureBox BlueNextTargetColor { get; set; }
+        private PictureBox GreenNextTargetColor { get; set; }
 
         public int Score { get; set; }
 
@@ -58,6 +63,8 @@ namespace RgbJourney.GameScreens
             _gameStep = GameStep.First;
 
             LoadTargetColorUI(content);
+
+            _nextColor = _gameStepManager.GenerateTargetColor();
         }
 
 
@@ -118,7 +125,8 @@ namespace RgbJourney.GameScreens
 
         private void HandleFirstStep()
         {
-            _selectedColor = _gameStepManager.GenerateTargetColor();
+            _selectedColor = _nextColor;
+            _nextColor = _gameStepManager.GenerateTargetColor();
             switch (_selectedColor)
             {
                 case CustomColor.Red:
@@ -141,6 +149,33 @@ namespace RgbJourney.GameScreens
                         BlueTargetColor.Visible = false;
                         GreenTargetColor.Visible = true;
                     }
+                    break;
+                default:
+                    break;
+            }
+            
+            switch (_nextColor)
+            {
+                case CustomColor.Red:
+                {
+                    RedNextTargetColor.Visible = true;
+                    BlueNextTargetColor.Visible = false;
+                    GreenNextTargetColor.Visible = false;
+                }
+                    break;
+                case CustomColor.Blue:
+                {
+                    RedNextTargetColor.Visible = false;
+                    BlueNextTargetColor.Visible = true;
+                    GreenNextTargetColor.Visible = false;
+                }
+                    break;
+                case CustomColor.Green:
+                {
+                    RedNextTargetColor.Visible = false;
+                    BlueNextTargetColor.Visible = false;
+                    GreenNextTargetColor.Visible = true;
+                }
                     break;
                 default:
                     break;
@@ -172,6 +207,7 @@ namespace RgbJourney.GameScreens
         private void LoadTargetColorUI(ContentManager content)
         {
             var targetPosition = new Vector2(800, 100);
+            var nextTargetPosition = new Vector2(800 + CELL_SIZE + CELL_SPACING, 100);
 
             RedTargetColor = new PictureBox(content.Load<Texture2D>("Red2"), new Rectangle(0, 0, CELL_SIZE, CELL_SIZE), new Rectangle(0, 0, CELL_SIZE, CELL_SIZE))
             {
@@ -202,6 +238,37 @@ namespace RgbJourney.GameScreens
             };
             GreenTargetColor.SetPosition(targetPosition);
             ControlManager.Add(GreenTargetColor);
+            
+            RedNextTargetColor = new PictureBox(content.Load<Texture2D>("Red2"), new Rectangle(0, 0, CELL_SIZE, CELL_SIZE), new Rectangle(0, 0, CELL_SIZE, CELL_SIZE))
+            {
+                Enabled = false,
+                Visible = false,
+                HasFocus = false,
+                TabStop = false
+            };
+            RedNextTargetColor.SetPosition(nextTargetPosition);
+            ControlManager.Add(RedNextTargetColor);
+
+            BlueNextTargetColor = new PictureBox(content.Load<Texture2D>("Blue2"), new Rectangle(0, 0, CELL_SIZE, CELL_SIZE), new Rectangle(0, 0, CELL_SIZE, CELL_SIZE))
+            {
+                Enabled = false,
+                Visible = false,
+                HasFocus = false,
+                TabStop = false,
+            };
+            BlueNextTargetColor.SetPosition(nextTargetPosition);
+            ControlManager.Add(BlueNextTargetColor);
+
+            GreenNextTargetColor = new PictureBox(content.Load<Texture2D>("Green2"), new Rectangle(0, 0, CELL_SIZE, CELL_SIZE), new Rectangle(0, 0, CELL_SIZE, CELL_SIZE))
+            {
+                Enabled = false,
+                Visible = false,
+                HasFocus = false,
+                TabStop = false,
+            };
+            GreenNextTargetColor.SetPosition(nextTargetPosition);
+            ControlManager.Add(GreenNextTargetColor);
+
         }
 
         private void HandleInput()
@@ -216,9 +283,9 @@ namespace RgbJourney.GameScreens
                 x.Position.FieldX == _player.Position.FieldX
                 && x.Position.FieldY == _player.Position.FieldY);
 
-            _currentColor = playerCell.Color;
+            _currentCellColor = playerCell.Color;
 
-            switch (_currentColor)
+            switch (_currentCellColor)
             {
                 case CustomColor.Red:
                     {
@@ -254,7 +321,7 @@ namespace RgbJourney.GameScreens
                     break;
             }
 
-            if (_currentColor == _selectedColor)
+            if (_currentCellColor == _selectedColor)
                 Score += 100;
             else
             {
