@@ -147,13 +147,6 @@
 /processorParam:TextureFormat=Compressed
 /build:Main.spritefont
 
-#begin PixelFont.spritefont
-/importer:FontDescriptionImporter
-/processor:FontDescriptionProcessor
-/processorParam:PremultiplyAlpha=True
-/processorParam:TextureFormat=Compressed
-/build:PixelFont.spritefont
-
 #begin Player.png
 /importer:TextureImporter
 /processor:TextureProcessor
